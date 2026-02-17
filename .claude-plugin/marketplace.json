@@ -1,0 +1,17 @@
+{
+  "name": "ai-infra",
+  "owner": {
+    "name": "Alex"
+  },
+  "plugins": [
+    {
+      "name": "ai-infra",
+      "source": "./",
+      "description": "Personal AI infrastructure for tracking cognitive state across Claude Code sessions.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Alex"
+      }
+    }
+  ]
+}
