@@ -1,0 +1,9 @@
+{
+  "name": "ai-infra",
+  "version": "0.1.0",
+  "description": "Personal AI infrastructure for tracking cognitive state across Claude Code sessions.",
+  "author": {
+    "name": "Alex"
+  },
+  "license": "MIT"
+}
