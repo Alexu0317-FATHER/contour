@@ -1,13 +1,13 @@
 {
-  "name": "ai-infra",
+  "name": "contour",
   "owner": {
     "name": "Alex"
   },
   "plugins": [
     {
-      "name": "ai-infra",
+      "name": "contour",
       "source": "./",
-      "description": "Personal AI infrastructure for tracking cognitive state across Claude Code sessions.",
+      "description": "Fine-grained cognitive state tracking for Claude Code.",
       "version": "0.1.0",
       "author": {
         "name": "Alex"

@@ -5,5 +5,10 @@
   "author": {
     "name": "Alex"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alexu0317-FATHER/contour"
+  },
+  "homepage": "https://github.com/Alexu0317-FATHER/contour"
 }

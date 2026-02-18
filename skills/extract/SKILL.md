@@ -10,7 +10,7 @@ allowed-tools: "Read, Write, Edit, Glob"
 Scan the entire conversation of the current session, extract signals worth long-term recording, and append them to `$AI_INFRA_DIR/extract-buffer.md`.
 
 > **Path configuration**: `$AI_INFRA_DIR` must be set before use. This is the directory where all AI infrastructure files are stored.
-> - Default recommended path: `~/.claude/ai-infra/`
+> - Default recommended path: `~/.claude/contour/`
 > - Set via environment variable, or replace this placeholder with your absolute path.
 
 ---

@@ -10,7 +10,7 @@ allowed-tools: "Read, Write, Edit, Glob"
 Read `$AI_INFRA_DIR/extract-buffer.md`, distribute each signal to the appropriate target files, then clear the buffer.
 
 > **Path configuration**: `$AI_INFRA_DIR` must be set before use. This is the directory where all AI infrastructure files are stored.
-> - Default recommended path: `~/.claude/ai-infra/`
+> - Default recommended path: `~/.claude/contour/`
 > - Set via environment variable, or replace this placeholder with your absolute path.
 
 ---
@@ -32,7 +32,9 @@ Before executing, read the following reference files for format specifications:
 | C | `{user}-coder-log.md` | Append-only audit log for human review | Append only (never read) |
 | D | `{user}-core.md` | Personality-level traits, thinking patterns, core preferences | Read only (never write) |
 
-> When additional domains exist (e.g., `{user}-designer.md` + `{user}-designer-log.md`), apply the same B/C logic to the corresponding domain files. Route signals based on their content domain, not by the `source` field (source indicates where the signal was captured, not its domain).
+> **MVP scope:** Single domain only. The routing principle below applies regardless: route signals by content domain, not by the `source` field (source indicates where the signal was captured, not its domain).
+>
+> *Multi-domain support (additional B/C file pairs) is a Phase 2 extension.*
 
 ---
 

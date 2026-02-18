@@ -1,7 +1,7 @@
 # 知界 (Contour) — 设计文档 v4
 
 **最后更新**: 2026-02-18
-**状态**: Skill架构设计完成，待实际部署测试
+**状态**: 所有设计文件完成，待实际部署测试（下一步：运行 /contour:setup 跑通全流程）
 
 ---
 
@@ -253,8 +253,9 @@ contour/                                # GitHub repo root = plugin root
 - [x] `plugin.json` 编写
 - [x] GitHub仓库创建 + plugin文件结构搭建
 - [ ] 在真实工作session中部署测试（5-10轮extract+sync）
-- [ ] CLAUDE.md监测指令prompt设计（监测规则 + 发现认知变化时的动作）
-- [ ] D文件初始化引导文案设计（场景A：用户有现成文档；场景B：用户无文档）
+- [x] CLAUDE.md监测指令prompt设计（监测规则 + 发现认知变化时的动作）→ `skills/setup/references/claude-md-injection.md`
+- [x] D文件初始化引导文案设计（场景A：用户有现成文档；场景B：用户无文档）→ `skills/setup/references/d-structure.md`
+- [x] `/contour:setup` SKILL.md完整实现（9步流程，替换placeholder）
 
 ### 中优先级
 

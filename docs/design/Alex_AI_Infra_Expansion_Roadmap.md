@@ -19,7 +19,7 @@ Claude Code的skill本质上就是markdown文件 + YAML frontmatter。这套系�
 3. ✅ `/sync` prompt设计完成（英文部署版）
 4. ✅ Reference文件完成（signal-formats、extract-output、b-structure、c-structure）
 5. ✅ `/contour:setup` 的SKILL.md设计
-6. ✅ `plugin.json` 编写 + GitHub仓库创建
+6. ✅ `plugin.json` 编写 + GitHub仓库创建（https://github.com/Alexu0317-FATHER/contour）
 7. ⬜ 在真实工作session中跑通5-10轮extract+sync
 8. ⬜ 验证认知追踪的准确性（B文件是否真实反映认知状态）
 9. ⬜ 验证去重和防污染效果
@@ -51,6 +51,8 @@ Claude Code的skill本质上就是markdown文件 + YAML frontmatter。这套系�
 - 使用流程和效果展示（附真实使用前后对比）
 - 用户使用指南：碰到AI解释过的信息时要告诉AI，这样extract才能识别
 - 环境变量配置说明
+- **素材点**：初始痛点是 vibe coding 时 AI 的两极化表现（把你当小白 or 当专家）；GitHub 受众里非程序员也多少沾点编程，这个痛点在这个圈子里共鸣度高——可作为公众号引流文章的切入角度
+- **素材点（定位差异化）**：Claude Code 里已经存在一种隐式记忆机制（如 MEMORY.md），但它依赖用户显式说出来才能记录，且颗粒度粗（行为规则层面）。Contour 的差异在于：从用户的**隐式行为**中检测认知状态——你不需要说"我不懂 git rebase"，你的提问已经暴露了这一点。这是现有机制做不到的。
 
 **4. 语言策略**
 
@@ -67,6 +69,8 @@ Claude Code的skill本质上就是markdown文件 + YAML frontmatter。这套系�
 ---
 
 ## 阶段二：多Domain自动扩展（个人认知技能树）
+
+> **MVP 约束（阶段一）**：单 domain，CLAUDE.md 注入统一写全局文件。多 domain 的 CLAUDE.md 工作区级注入策略在本阶段一并设计实现。
 
 ### 核心构想
 
