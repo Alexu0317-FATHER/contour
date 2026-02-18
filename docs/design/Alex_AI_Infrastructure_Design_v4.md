@@ -1,6 +1,6 @@
-# Alex 个人AI基础设施设计文档 v4
+# 知界 (Contour) — 设计文档 v4
 
-**最后更新**: 2026-02-17
+**最后更新**: 2026-02-18
 **状态**: Skill架构设计完成，待实际部署测试
 
 ---
@@ -23,9 +23,9 @@
 
 - **仅在Claude Code中运行**
 - 以 **Plugin** 形式发布到GitHub，通过 `/plugin` 安装
-- 安装后通过 `/ai-infra:setup` 完成初始化
-- 数据文件默认存储位置：`~/.claude/ai-infra/`，可通过环境变量 `$AI_INFRA_DIR` 覆盖
-- Skill以命名空间形式调用：`/ai-infra:setup`、`/ai-infra:extract`、`/ai-infra:sync`
+- 安装后通过 `/contour:setup` 完成初始化
+- 数据文件默认存储位置：`~/.claude/contour/`，可通过环境变量 `$AI_INFRA_DIR` 覆盖
+- Skill以命名空间形式调用：`/contour:setup`、`/contour:extract`、`/contour:sync`
 
 ---
 
@@ -33,22 +33,22 @@
 
 ### 数据文件（用户本地）
 
-存放在 `$AI_INFRA_DIR`（默认 `~/.claude/ai-infra/`）：
+存放在 `$AI_INFRA_DIR`（默认 `~/.claude/contour/`）：
 
 ```markdown
-~/.claude/ai-infra/
+~/.claude/contour/
 ├── extract-buffer.md         (A) 临时提取缓冲，跨session数据桥梁
 ├── {user}-core.md            (D) 人格级：思维方式、核心偏好、价值观
 ├── {user}-coder.md           (B) 代码领域：认知状态表格 + 通信规则
 └── {user}-coder-log.md       (C) 代码领域：完整演变记录
 ```
 
-> `{user}` 为用户名，由 `/ai-infra:setup` 初始化时设定。
+> `{user}` 为用户名，由 `/contour:setup` 初始化时设定。
 
 ### Plugin文件（GitHub仓库）
 
 ```markdown
-ai-infra/                               # GitHub repo root = plugin root
+contour/                                # GitHub repo root = plugin root
 ├── .claude-plugin/
 │   └── plugin.json                      # Plugin元数据
 ├── skills/
@@ -72,7 +72,7 @@ ai-infra/                               # GitHub repo root = plugin root
 └── README.md
 ```
 
-**语言策略**：`/ai-infra:setup` 第一步让用户选择语言（中文/English）。选择后，所有用户交互输出（description、报告、引导文案）和生成的ABCD文件内容均使用该语言。Skill内部prompt始终使用英文。中文版extract/sync仅作为设计参考文档，不参与运行。
+**语言策略**：`/contour:setup` 第一步让用户选择语言（中文/English）。选择后，所有用户交互输出（description、报告、引导文案）和生成的ABCD文件内容均使用该语言。Skill内部prompt始终使用英文。中文版extract/sync仅作为设计参考文档，不参与运行。
 
 ---
 
@@ -86,8 +86,8 @@ ai-infra/                               # GitHub repo root = plugin root
 
 **特征**：
 
-- 由 `/ai-infra:extract` 追加写入
-- 由 `/ai-infra:sync` 读取并清空
+- 由 `/contour:extract` 追加写入
+- 由 `/contour:sync` 读取并清空
 - 用标签区分信号类型：`[cognition]` `[thinking]` `[preference]`
 
 ### D — {user}-core.md
@@ -98,9 +98,9 @@ ai-infra/                               # GitHub repo root = plugin root
 
 **特征**：
 
-- **全局加载**：`/ai-infra:setup` 在 `~/.claude/CLAUDE.md` 中注入引用指令，每个session自动生效
+- **全局加载**：`/contour:setup` 在 `~/.claude/CLAUDE.md` 中注入引用指令，每个session自动生效
 - 变化频率极低（半年到一年审视一次），目标20-50行
-- `/ai-infra:sync` 不直接修改D；发现可能需要更新D的信号时，在C中记录 `[core-candidate]`，由用户手动决策
+- `/contour:sync` 不直接修改D；发现可能需要更新D的信号时，在C中记录 `[core-candidate]`，由用户手动决策
 
 **D的初始化要点**：
 
@@ -120,7 +120,7 @@ ai-infra/                               # GitHub repo root = plugin root
 - 初始化时以 `b-structure.md` 为模板生成
 - 两个更新来源：
   1. **主力机制**：CLAUDE.md中的监测指令，在工作session中实时识别认知变化并更新B
-  2. **补网机制**：`/ai-infra:extract` + `/ai-infra:sync`，捕获主力机制遗漏的信号
+  2. **补网机制**：`/contour:extract` + `/contour:sync`，捕获主力机制遗漏的信号
 
 ### C — {user}-coder-log.md
 
@@ -130,7 +130,7 @@ ai-infra/                               # GitHub repo root = plugin root
 
 **特征**：
 
-- 由 `/ai-infra:sync` 追加写入，标注执行日期
+- 由 `/contour:sync` 追加写入，标注执行日期
 - **只追加，不读取**——避免token成本和上下文噪音
 - 初始化时以 `c-structure.md` 为模板生成
 
@@ -138,7 +138,7 @@ ai-infra/                               # GitHub repo root = plugin root
 
 ## CLAUDE.md加载指令
 
-`/ai-infra:setup` 在 `~/.claude/CLAUDE.md`（全局）中注入以下指令：
+`/contour:setup` 在 `~/.claude/CLAUDE.md`（全局）中注入以下指令：
 
 **D的加载**：引用 `{user}-core.md`，每个session自动生效。
 
@@ -150,7 +150,7 @@ ai-infra/                               # GitHub repo root = plugin root
 
 > 具体的CLAUDE.md prompt文案（监测规则 + 更新动作）待设计。见"下一步"。
 
-**关于 `--resume` 的行为**：CC在resume时会重新读取当前CLAUDE.md，所以监测指令对resumed session中的新交互生效。但AI不会主动回扫旧对话历史——旧session的全面信号提取只能靠 `/ai-infra:extract`。
+**关于 `--resume` 的行为**：CC在resume时会重新读取当前CLAUDE.md，所以监测指令对resumed session中的新交互生效。但AI不会主动回扫旧对话历史——旧session的全面信号提取只能靠 `/contour:extract`。
 
 ---
 
@@ -158,7 +158,7 @@ ai-infra/                               # GitHub repo root = plugin root
 
 三个skill均设置 `disable-model-invocation: true`，仅由用户手动调用。
 
-### `/ai-infra:setup`
+### `/contour:setup`
 
 冷启动引导。执行流程：
 
@@ -175,7 +175,7 @@ ai-infra/                               # GitHub repo root = plugin root
 8. **注入CLAUDE.md**：将D引用、B引用及监测指令写入全局或工作区CLAUDE.md
 9. 报告初始化结果
 
-### `/ai-infra:extract`
+### `/contour:extract`
 
 扫描当前session对话，提取信号写入A。在目标session中运行（当前session或通过 `--resume` 恢复的历史session）。
 
@@ -184,7 +184,7 @@ ai-infra/                               # GitHub repo root = plugin root
 - 只写A，不做去重和路由决策
 - Reference文件：`references/signal-formats.md`、`references/extract-output.md`
 
-### `/ai-infra:sync`
+### `/contour:sync`
 
 读取A，分发信号到B/C，清空A。**必须在新的专用session中运行**。
 
@@ -202,8 +202,8 @@ ai-infra/                               # GitHub repo root = plugin root
 ### 首次安装
 
 ```markdown
-1. 通过 /plugin 安装 ai-infra plugin
-2. 运行 /ai-infra:setup
+1. 通过 /plugin 安装 contour plugin
+2. 运行 /contour:setup
    └─ 创建数据目录和初始文件（A/B/C/D）
    └─ 往 ~/.claude/CLAUDE.md 注入D和B的加载指令 + 监测规则
 3. 重启Claude Code，验证D和B是否正常加载
@@ -215,10 +215,10 @@ ai-infra/                               # GitHub repo root = plugin root
 1. 在任意工作区启动CC，正常工作
    └─ CLAUDE.md自动加载D+B → CC知道用户认知状态
    └─ 工作中实时识别并更新B（主力机制）
-2. Session结束时或之后通过 --resume 恢复，运行 /ai-infra:extract
+2. Session结束时或之后通过 --resume 恢复，运行 /contour:extract
    └─ 读取B + 扫描session对话 → 写入A
    └─ 作为主力机制的补网
-3. 时机合适时在新session中运行 /ai-infra:sync（可攒多次extract后再sync）
+3. 时机合适时在新session中运行 /contour:sync（可攒多次extract后再sync）
    └─ 读A+B+D → 分发到B/C → 清空A
 ```
 
@@ -248,13 +248,13 @@ ai-infra/                               # GitHub repo root = plugin root
 - [x] `/extract` prompt设计完成（英文部署版）
 - [x] `/sync` prompt设计完成（英文部署版）
 - [x] Reference文件完成（signal-formats、extract-output、b-structure、c-structure）
-- [ ] `/ai-infra:extract` 和 `/ai-infra:sync` 的SKILL.md封装（frontmatter + 相对路径引用 + 中文description）
-- [ ] `plugin.json` 编写
-- [ ] GitHub仓库创建 + plugin文件结构搭建
+- [x] `/contour:extract` 和 `/contour:sync` 的SKILL.md封装（frontmatter + 相对路径引用）
+- [x] `/contour:setup` 的SKILL.md设计
+- [x] `plugin.json` 编写
+- [x] GitHub仓库创建 + plugin文件结构搭建
 - [ ] 在真实工作session中部署测试（5-10轮extract+sync）
 - [ ] CLAUDE.md监测指令prompt设计（监测规则 + 发现认知变化时的动作）
 - [ ] D文件初始化引导文案设计（场景A：用户有现成文档；场景B：用户无文档）
-- [ ] `/ai-infra:setup` 的SKILL.md设计
 
 ### 中优先级
 

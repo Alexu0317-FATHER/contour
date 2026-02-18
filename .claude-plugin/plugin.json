@@ -1,7 +1,7 @@
 {
-  "name": "ai-infra",
+  "name": "contour",
   "version": "0.1.0",
-  "description": "Personal AI infrastructure for tracking cognitive state across Claude Code sessions.",
+  "description": "Contour (知界) — Fine-grained cognitive boundary tracking for Claude Code.",
   "author": {
     "name": "Alex"
   },
