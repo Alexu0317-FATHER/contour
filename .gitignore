@@ -12,3 +12,6 @@ Desktop.ini
 
 # Node (if needed later)
 node_modules/
+
+# Contour internal design docs (not for public repo)
+docs/design/
