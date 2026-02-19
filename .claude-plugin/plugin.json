@@ -6,9 +6,6 @@
     "name": "Alex"
   },
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Alexu0317-FATHER/contour"
-  },
+  "repository": "https://github.com/Alexu0317-FATHER/contour",
   "homepage": "https://github.com/Alexu0317-FATHER/contour"
 }
