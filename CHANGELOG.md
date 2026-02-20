@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.1] — 2026-02-20
+
+### Fixed
+- `/extract` now refuses to run in a Contour-operational session (e.g., after `/sync` or `/setup`) to prevent echo signal contamination.
+- `/extract` report output constrained: factual buffer status observations are allowed, but AI must not describe Contour's internal mechanisms or imply that extract/sync can modify Core Profile.
+- `/sync` report now includes a post-completion reminder not to run `/extract` in the same session.
+
+---
+
 ## [0.2.0] — 2026-02-20
 
 ### Added
