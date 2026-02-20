@@ -151,7 +151,7 @@ Contour will respect your manual edits during the next session.
 
 ## Version
 
-`v0.1.0` — Pre-release. In active testing.
+`v0.2.1` — Pre-release. In active testing.
 
 ## License
 

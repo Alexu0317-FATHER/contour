@@ -153,7 +153,7 @@ export AI_INFRA_DIR="/path/to/your/custom/dir"
 
 ## 版本
 
-`v0.1.0` — 预发布版本。正在积极测试中。
+`v0.2.1` — 预发布版本。正在积极测试中。
 
 ## 开源协议
 
