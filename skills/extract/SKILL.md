@@ -9,7 +9,7 @@ allowed-tools: "Read, Write, Edit, Glob"
 
 Scan the entire conversation of the current session, extract signals worth long-term recording, and append them to `$AI_INFRA_DIR/extract-buffer.md`.
 
-> **Path configuration**: `$AI_INFRA_DIR` must be set before use. This is the directory where all AI infrastructure files are stored.
+> **Path configuration**: `$AI_INFRA_DIR` must be set before use. This is the directory where all Contour data files are stored.
 > - Default recommended path: `~/.claude/contour/`
 > - Set via environment variable, or replace this placeholder with your absolute path.
 
@@ -19,26 +19,26 @@ Scan the entire conversation of the current session, extract signals worth long-
 
 Before executing, read the following reference files for format specifications:
 - `references/signal-formats.md` — recording formats for all three signal types
-- `references/extract-output.md` — A's write format, example output, and report template
+- `references/extract-output.md` — Extract Buffer write format, example output, and report template
 
 ---
 
 ## File References
 
-| Label | File | Role | Access |
-|-------|------|------|--------|
-| A | `extract-buffer.md` | Temporary buffer: write extracted signals | Append |
-| B | `{user}-coder.md` | Current cognitive state for the coder domain | Read only |
-| C | `{user}-coder-log.md` | Append-only audit log for human review | (not accessed) |
-| D | `{user}-core.md` | Personality-level traits, thinking patterns, core preferences | (not accessed) |
+| File | Term | Role | Access |
+|------|------|------|--------|
+| `extract-buffer.md` | Extract Buffer | Temporary buffer: write extracted signals | Append |
+| `{user}-{domain}.md` | Domain State | Current cognitive state for the domain | Read only |
+| `{user}-{domain}-log.md` | Domain Log | Append-only audit log for human review | (not accessed) |
+| `{user}-core.md` | Core Profile | Personality-level traits, thinking patterns, core preferences | (not accessed) |
 
 ---
 
 ## Constraints
 
 - **Read** the conversation content of the current session
-- **Read** the corresponding domain B file (e.g., `{user}-coder.md`) for cognitive state comparison
-- **Do not load** C (log) or D (core) files
+- **Read** the corresponding Domain State file (e.g., `{user}-coder.md`) for cognitive state comparison
+- **Do not load** Domain Log or Core Profile files
 - **Only write** to extract-buffer.md (append, do not overwrite existing content)
 - **Do not judge** deduplication, do not make target file routing decisions — those are `/sync`'s responsibilities
 - If the current session has no signals worth extracting, inform the user "No extractable signals in this session" and write nothing
@@ -49,20 +49,20 @@ Before executing, read the following reference files for format specifications:
 
 ### [cognition] Cognitive Signals
 
-Record changes or exposures in the user's cognitive state regarding a specific knowledge point. **Compare against B** to determine whether observed behavior represents a state change.
+Record changes or exposures in the user's cognitive state regarding a specific knowledge point. **Compare against Domain State** to determine whether observed behavior represents a state change.
 
 **Extraction conditions** (any one is sufficient):
 - The user asked a question that exposed a lack of understanding of a concept/tool/process → `unknown`
 - The user listened to AI's explanation and expressed initial understanding ("I see", "got it", "makes sense now") → `partial` (cognitive exposure, not mastery)
 - The user indicated they already know something AI was explaining ("I know this", "skip the explanation", "no need to explain") → `mastered`
-- The user demonstrated **behavioral mastery**: correctly used a concept/tool/process in a practical context (e.g., giving the instruction "submit this as a PR" when PR submission was previously marked as unknown/partial in B) → `mastered`
-- The user asked a basic question about a knowledge point that is marked as `partial` or `mastered` in B → `unknown` (cognitive regression)
+- The user demonstrated **behavioral mastery**: correctly used a concept/tool/process in a practical context (e.g., giving the instruction "submit this as a PR" when PR submission was previously marked as unknown/partial in Domain State) → `mastered`
+- The user asked a basic question about a knowledge point that is marked as `partial` or `mastered` in Domain State → `unknown` (cognitive regression)
 
 **Do not extract**:
 - The user asked a purely operational question ("how do I spell this command") with no cognitive significance
 - AI proactively explained a concept but the user had no reaction or interaction — cannot determine whether the user absorbed it
-- Routine tool usage of concepts **not tracked in B** — no baseline to compare against
-- The user used a concept that is already marked as `mastered` in B with no change — not a signal, just normal usage
+- Routine tool usage of concepts **not tracked in Domain State** — no baseline to compare against
+- The user used a concept that is already marked as `mastered` in Domain State with no change — not a signal, just normal usage
 
 Record each signal using the format defined in `signal-formats.md`.
 
@@ -99,7 +99,7 @@ Record the user's explicit preference expressions regarding AI communication sty
 ## Execution Steps
 
 1. Read the reference files listed above for format specifications
-2. Read the corresponding domain B file to establish the user's current cognitive baseline
+2. Read the corresponding Domain State file to establish the user's current cognitive baseline
 3. Review the entire conversation of the current session
 4. Screen for each of the three signal types according to the definitions above, strictly following extraction and non-extraction conditions
 5. If signals exist, append to extract-buffer.md following the write format in `extract-output.md`

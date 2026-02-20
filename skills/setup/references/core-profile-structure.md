@@ -1,10 +1,10 @@
-# D File Structure & Initialization Guide
+# Core Profile Structure & Initialization Guide
 
 Defines the format of `{user}-core.md` (the Core Profile file) and the initialization process for both setup scenarios.
 
 ---
 
-## D File Format
+## Core Profile Format
 
 ```markdown
 # {User} — Core Profile
@@ -40,7 +40,7 @@ Last reviewed: YYYY-MM
 - Skills or expertise that don't affect communication style
 - Personality traits not relevant to AI interaction
 - One-time context or situational information
-- Anything that could go in a B file (domain-specific knowledge state) instead
+- Anything that could go in a Domain State file (domain-specific knowledge state) instead
 
 ---
 
@@ -60,9 +60,9 @@ Use when the user provides a pre-existing profile document.
    - Thinking patterns → keep if persistent and cross-domain
    - Domain expertise → only keep if it means "AI can skip explaining X entirely"
 
-4. **Extract and restructure** into the D file format. Rewrite for clarity and concision; do not copy verbatim if the original format doesn't fit.
+4. **Extract and restructure** into the Core Profile format. Rewrite for clarity and concision; do not copy verbatim if the original format doesn't fit.
 
-5. **Present the draft D file to the user** and ask (AskUserQuestion):
+5. **Present the draft Core Profile to the user** and ask (AskUserQuestion):
    > "Does this capture how you want me to interact with you?"
    >
    > Options: "Looks good" / "I want to add something" / "Remove or adjust something"
@@ -102,6 +102,7 @@ Use `AskUserQuestion` (multiSelect: true):
 > "How do you prefer I communicate?"
 
 Options:
+
 - Direct and brief — skip context, just the answer
 - Detailed explanations — I want to understand the "why"
 - Examples over abstractions — show, don't tell
@@ -118,6 +119,7 @@ Use `AskUserQuestion` (multiSelect: true):
 > "When solving a problem or making a decision, what's your natural approach?"
 
 Options:
+
 - Validate the core before expanding — prove it works small before going big
 - Think in systems — understand the whole picture before the parts
 - Bias toward action — build and learn, adjust as you go
@@ -133,6 +135,7 @@ Use `AskUserQuestion` (multiSelect: true):
 > "Are there things AI does that you love or strongly dislike?"
 
 Options:
+
 - Push back directly when I'm wrong — don't soften it
 - Don't auto-add caveats and disclaimers to everything
 - Don't embellish or rewrite my words without being asked
@@ -144,7 +147,7 @@ Options:
 
 ### After collecting answers
 
-1. Synthesize the answers into the D file format.
+1. Synthesize the answers into the Core Profile format.
 2. Present the draft and confirm with the user (same AskUserQuestion pattern as Scenario A step 5).
 3. If the user wants to add or adjust: collect input, update the draft, re-confirm.
 4. Finalize once confirmed.
@@ -153,6 +156,6 @@ Options:
 
 ## Notes
 
-- D is initialized once and rarely updated. Resist adding things that belong in B (cognitive state) or are session-specific.
-- If the user skips a question, leave that dimension out of D — a minimal D is better than a padded one.
+- Core Profile is initialized once and rarely updated. Resist adding things that belong in Domain State (cognitive state) or are session-specific.
+- If the user skips a question, leave that dimension out of Core Profile — a minimal Core Profile is better than a padded one.
 - After initialization, tell the user: "You can update this file manually at any time. Aim to review it every 6–12 months."

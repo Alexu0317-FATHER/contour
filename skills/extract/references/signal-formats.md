@@ -1,6 +1,6 @@
 # Signal Recording Formats
 
-Canonical formats for the three signal types. Used by `/extract` when writing to A, and by `/sync` when parsing A.
+Canonical formats for the three signal types. Used by `/extract` when writing to Extract Buffer, and by `/sync` when parsing Extract Buffer.
 
 ---
 
@@ -10,7 +10,7 @@ Canonical formats for the three signal types. Used by `/extract` when writing to
 [cognition] {brief description of the knowledge point}
   status: {unknown | partial | mastered}
   evidence: {specific behavior from the session, 1-2 sentences}
-  reference: {if status was determined by comparing with B, note B's current record, e.g., "B: partial" or "B: not tracked"}
+  reference: {if status was determined by comparing with Domain State, note Domain State's current record, e.g., "Domain State: partial" or "Domain State: not tracked"}
 ```
 
 **Status definitions**:

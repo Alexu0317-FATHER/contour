@@ -1,6 +1,6 @@
-# C File Structure
+# Domain Log File Structure
 
-Defines the structure of domain audit log files (e.g., `{user}-coder-log.md`). C is append-only and never read by /sync.
+Defines the structure of domain audit log files (e.g., `{user}-coder-log.md`). Domain Log is append-only and never read by /sync.
 
 ---
 
@@ -10,7 +10,7 @@ Entries are grouped under `/sync` execution date headers.
 
 ### [cognition] Entry
 
-```
+```markdown
 [cognition] {knowledge point}: {old status} → {new status}
   evidence: {from the signal}
   source: {workspace} | {topic}
@@ -22,7 +22,7 @@ Entries are grouped under `/sync` execution date headers.
 
 ### [thinking] Entry
 
-```
+```markdown
 [thinking] {description}
   evidence: {from the signal}
   source: {workspace} | {topic}
@@ -30,14 +30,14 @@ Entries are grouped under `/sync` execution date headers.
 
 ### [core-candidate] Entry
 
-Appended when a thinking pattern is not represented in D, contradicts D, or when a preference is cross-domain:
+Appended when a thinking pattern is not represented in Core Profile, contradicts Core Profile, or when a preference is cross-domain:
 
-```
+```markdown
 [core-candidate] {description} — may warrant core.md update if pattern persists
 ```
 
-```
-[core-candidate] contradicts D: "{existing entry}" — new signal: {description}
+```markdown
+[core-candidate] contradicts Core Profile: "{existing entry}" — new signal: {description}
 ```
 
 ---

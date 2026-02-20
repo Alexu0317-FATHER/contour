@@ -8,14 +8,15 @@ Most AI tools treat you as either an expert or a beginner. Contour tracks exactl
 
 Contour uses four local files per domain:
 
-- **D** (`{user}-core.md`) — Your communication profile. Loaded globally, rarely changes.
-- **B** (`{user}-{domain}.md`) — Your cognitive state snapshot for a domain. Updated continuously.
-- **C** (`{user}-{domain}-log.md`) — Append-only audit log. For your review only.
-- **A** (`extract-buffer.md`) — Cross-session signal buffer.
+- **Core Profile** (`{user}-core.md`) — Your communication profile. Loaded globally, rarely changes.
+- **Domain State** (`{user}-{domain}.md`) — Your cognitive state snapshot for a domain. Updated continuously.
+- **Domain Log** (`{user}-{domain}-log.md`) — Append-only audit log. For your review only.
+- **Extract Buffer** (`extract-buffer.md`) — Cross-session signal buffer.
 
 Two update mechanisms run in parallel:
-1. **Live monitoring** — Instructions injected into `CLAUDE.md` detect cognitive changes during work and update B silently.
-2. **Extract + sync** — `/contour:extract` scans a session for signals; `/contour:sync` distributes them to B and C.
+
+1. **Live monitoring** — Instructions injected into `CLAUDE.md` detect cognitive changes during work and update Domain State silently.
+2. **Extract + sync** — `/contour:extract` scans a session for signals; `/contour:sync` distributes them to Domain State and Domain Log.
 
 ## Requirements
 
@@ -25,13 +26,13 @@ Two update mechanisms run in parallel:
 
 Run `/plugin` in Claude Code and enter:
 
-```
+```markdown
 Alexu0317-FATHER/contour
 ```
 
 Then initialize:
 
-```
+```markdown
 /contour:setup
 ```
 
@@ -41,9 +42,10 @@ Restart Claude Code after setup completes to activate the live monitoring instru
 
 | Command | When to run | What it does |
 |---------|-------------|--------------|
-| `/contour:setup` | Once, after install | Initializes your D/B/C/A files and injects monitoring into `CLAUDE.md` |
+| `/contour:setup` | Once, after install | Initializes your Core Profile, Domain State, Domain Log, and Extract Buffer files and injects monitoring into `CLAUDE.md` |
 | `/contour:extract` | End of a significant session | Scans the session for cognitive signals, writes to buffer |
-| `/contour:sync` | In a new dedicated session | Reads buffer, updates B and C, clears buffer |
+| `/contour:sync` | In a new dedicated session | Reads buffer, updates Domain State and Domain Log, clears buffer |
+| `/contour:uninstall` | When you want to remove Contour | Removes monitoring injection from `CLAUDE.md`, optionally deletes data files |
 
 ## Data files
 
