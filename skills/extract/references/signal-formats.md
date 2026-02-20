@@ -8,13 +8,12 @@ Canonical formats for the three signal types. Used by `/extract` when writing to
 
 ```
 [cognition] {brief description of the knowledge point}
-  status: {unknown | partial | mastered}
+  status: {partial | mastered}
   evidence: {specific behavior from the session, 1-2 sentences}
   reference: {if status was determined by comparing with Domain State, note Domain State's current record, e.g., "Domain State: partial" or "Domain State: not tracked"}
 ```
 
 **Status definitions**:
-- `unknown` — user asked a basic conceptual question, exposing lack of understanding
 - `partial` — user expressed initial understanding after explanation ("I see", "got it"), but no behavioral proof of mastery
 - `mastered` — user either stated they already know it, or demonstrated behavioral mastery (correctly used the concept in a practical context)
 

@@ -51,7 +51,7 @@ Appended when a thinking pattern is not represented in Core Profile, contradicts
   evidence: user instructed "submit this as a PR to the main branch"
   source: Life_with_AI | Discussion of git workflow and AI infrastructure design
 
-[cognition] environment variable separation: mastered → unknown (regression)
+[cognition] environment variable separation: mastered → partial (regression)
   evidence: user asked "why do we need to separate env variables?"
   source: Content_Creator | Configuring video auto-publish script
 

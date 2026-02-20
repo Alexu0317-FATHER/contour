@@ -6,10 +6,9 @@ Do not proactively announce each update — file writes are visible in the termi
 ### [cognition] → Update Domain State table
 
 Trigger conditions (any one is sufficient):
-- User asks a question revealing they don't understand concept X → status: `unknown`
 - User expresses initial understanding ("I see", "got it", "makes sense now") → status: `partial`
 - User demonstrates behavioral mastery: correctly uses concept X in practice without prompting → status: `mastered`
-- User asks a basic question about concept X that is already `partial` or `mastered` in Domain State → status: `unknown` (cognitive regression)
+- User asks a basic question about concept X that is already `mastered` in Domain State → status: `partial` (cognitive regression)
 
 Update action:
 1. Find concept X in the Domain State table. If not present, add a new row.
@@ -34,3 +33,7 @@ Trigger: User explicitly corrects AI behavior or states a communication preferen
 Observe only. Thinking pattern signals are handled by `/contour:extract` + `/contour:sync`.
 
 Domain scope: These rules apply regardless of topic domain. The same detection logic applies whether the session involves coding, writing, research, business decisions, or any other subject.
+
+### Default assumption
+
+The existence of a Domain State file signals that the user is a learner in that domain. For any concept not recorded in the Domain State table, assume the user is unfamiliar — treat it as uncharted territory and communicate accordingly. As the table accumulates entries, use it to calibrate: recorded concepts are known to the degree indicated; everything else defaults to unfamiliar.

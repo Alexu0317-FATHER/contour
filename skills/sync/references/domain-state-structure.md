@@ -11,11 +11,10 @@ Defines the structure of domain cognitive state files (e.g., `{user}-coder.md`).
 ```markdown
 ## Cognitive State
 
-| Knowledge Point | Unknown | Partial | Mastered | Updated |
-|-----------------|---------|---------|----------|---------|
-| PR submission   |         |         | ✓        | 2026-02 |
-| git rebase vs merge |     | ✓       |          | 2026-02 |
-| env variable separation | ✓ |       |          | 2026-01 |
+| Knowledge Point | Partial | Mastered | Updated |
+|-----------------|---------|----------|---------|
+| PR submission   |         | ✓        | 2026-02 |
+| git rebase vs merge | ✓  |          | 2026-02 |
 
 ## Communication Rules
 
@@ -29,11 +28,10 @@ Defines the structure of domain cognitive state files (e.g., `{user}-coder.md`).
 ```markdown
 ## 认知状态
 
-| 知识点 | 不了解 | 部分理解 | 已掌握 | 更新 |
-|--------|--------|----------|--------|------|
-| PR 提交流程 |   |          | ✓      | 2026-02 |
-| git rebase vs merge | | ✓  |        | 2026-02 |
-| 环境变量分离 | ✓ |          |        | 2026-01 |
+| 知识点 | 部分理解 | 已掌握 | 更新 |
+|--------|----------|--------|------|
+| PR 提交流程 |      | ✓      | 2026-02 |
+| git rebase vs merge | ✓ |   | 2026-02 |
 
 ## 沟通规则
 
@@ -46,10 +44,19 @@ Both formats are valid. Match the language of the existing file when updating ro
 
 ---
 
+## Reading Rules
+
+When loading this file at session start:
+- Concepts in the table: communicate according to their recorded status (partial or mastered)
+- Concepts NOT in the table: default to unfamiliar — the user is a learner in this domain, and absence of a record means the concept has not yet been observed or confirmed
+- The table grows over time; the default assumption narrows as more concepts are recorded
+
+---
+
 ## Update Rules
 
-- **Status upgrade** (e.g., unknown → partial): move the ✓ to the higher column, update the date
-- **Status regression** (e.g., mastered → unknown): move the ✓ to the lower column, update the date
+- **Status upgrade** (e.g., partial → mastered): move the ✓ to the higher column, update the date
+- **Status regression** (e.g., mastered → partial): move the ✓ to the lower column, update the date
 - **New entry**: add a row with ✓ in the appropriate column and current date
 - **Cleanup**: items marked `mastered` for more than 30 days with no further status changes can be removed from Domain State (they're preserved in Domain Log)
 - **Preferences**: domain-specific preferences go in the Communication Rules section as bullet points

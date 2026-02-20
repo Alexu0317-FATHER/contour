@@ -76,8 +76,8 @@ For every signal in Extract Buffer, determine its type and execute the correspon
 1. **Check Domain State for an existing entry on the same knowledge point.**
    - Same knowledge point = same concept/tool/process, regardless of wording differences (e.g., "git rebase vs merge" and "difference between rebase and merge" are the same)
    - If an existing entry has **the same cognitive status**, this signal is a duplicate → skip Domain State update, still log to Domain Log
-   - If an existing entry has **a lower cognitive status** (e.g., unknown → partial, partial → mastered), move the ✓ in Domain State to the higher column per `domain-state-structure.md`, update the date → log the upgrade to Domain Log
-   - If an existing entry has **a higher cognitive status** (e.g., mastered → unknown), this is a **cognitive regression** → move the ✓ in Domain State to the lower column, update the date → log the regression to Domain Log
+   - If an existing entry has **a lower cognitive status** (e.g., partial → mastered), move the ✓ in Domain State to the higher column per `domain-state-structure.md`, update the date → log the upgrade to Domain Log
+   - If an existing entry has **a higher cognitive status** (e.g., mastered → partial), this is a **cognitive regression** → move the ✓ in Domain State to the lower column, update the date → log the regression to Domain Log
    - If **no existing entry**, add a new row to Domain State → log to Domain Log
 
 2. **Append to Domain Log** using the cognition entry format in `domain-log-structure.md`.
@@ -145,5 +145,5 @@ When in doubt, **keep both entries** — false deduplication (losing a real sign
 
 - **Multiple extract blocks in Extract Buffer**: Process them chronologically. Later signals may override earlier ones for the same knowledge point.
 - **Signals from different workspaces**: Route by content domain, not by source workspace. A coding cognition signal captured in `Content_Creator` still goes to the coder domain files. The `source` field is recorded in Domain Log for traceability, not for routing.
-- **Conflicting signals in the same sync**: If two signals in Extract Buffer contradict each other (e.g., one says "unknown", another says "mastered" for the same knowledge point), use the **later** one (it reflects more recent state).
+- **Conflicting signals in the same sync**: If two signals in Extract Buffer contradict each other (e.g., one says "partial", another says "mastered" for the same knowledge point), use the **later** one (it reflects more recent state).
 - **Missing target files**: If a domain file (Domain State/Domain Log) doesn't exist yet, create it with the appropriate structure per the reference files before writing.

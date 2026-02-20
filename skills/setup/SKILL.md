@@ -35,8 +35,8 @@ Last synced: (not yet synced)
 
 ## Cognitive State
 
-| Knowledge Point | Unknown | Partial | Mastered | Updated |
-|-----------------|---------|---------|----------|---------|
+| Knowledge Point | Partial | Mastered | Updated |
+|-----------------|---------|----------|---------|
 
 ## Communication Rules
 
@@ -51,8 +51,8 @@ Last synced: (not yet synced)
 
 ## 认知状态
 
-| 知识点 | 不了解 | 部分理解 | 已掌握 | 更新 |
-|--------|--------|----------|--------|------|
+| 知识点 | 部分理解 | 已掌握 | 更新 |
+|--------|----------|--------|------|
 
 ## 沟通规则
 

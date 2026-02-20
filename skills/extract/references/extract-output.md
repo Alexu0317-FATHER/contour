@@ -40,8 +40,8 @@ source: Life_with_AI
   reference: Domain State: partial
 
 [cognition] environment variable separation
-  status: unknown
-  evidence: the user asked "why do we need to separate env variables?" — a basic conceptual question
+  status: partial
+  evidence: the user asked "why do we need to separate env variables?" — basic question suggesting regression
   reference: Domain State: mastered (cognitive regression)
 
 [thinking] validate core logic before considering expansion

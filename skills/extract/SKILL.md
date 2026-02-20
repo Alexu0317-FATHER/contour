@@ -52,11 +52,10 @@ Before executing, read the following reference files for format specifications:
 Record changes or exposures in the user's cognitive state regarding a specific knowledge point. **Compare against Domain State** to determine whether observed behavior represents a state change.
 
 **Extraction conditions** (any one is sufficient):
-- The user asked a question that exposed a lack of understanding of a concept/tool/process → `unknown`
 - The user listened to AI's explanation and expressed initial understanding ("I see", "got it", "makes sense now") → `partial` (cognitive exposure, not mastery)
 - The user indicated they already know something AI was explaining ("I know this", "skip the explanation", "no need to explain") → `mastered`
-- The user demonstrated **behavioral mastery**: correctly used a concept/tool/process in a practical context (e.g., giving the instruction "submit this as a PR" when PR submission was previously marked as unknown/partial in Domain State) → `mastered`
-- The user asked a basic question about a knowledge point that is marked as `partial` or `mastered` in Domain State → `unknown` (cognitive regression)
+- The user demonstrated **behavioral mastery**: correctly used a concept/tool/process in a practical context (e.g., giving the instruction "submit this as a PR" when PR submission was previously marked as partial in Domain State) → `mastered`
+- The user asked a basic question about a knowledge point that is marked as `mastered` in Domain State → `partial` (cognitive regression)
 
 **Do not extract**:
 - The user asked a purely operational question ("how do I spell this command") with no cognitive significance
