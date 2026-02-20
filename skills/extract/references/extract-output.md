@@ -64,3 +64,11 @@ Extract complete ({date}):
 - Signals: {n} cognition, {m} thinking, {k} preference
 - Written to extract-buffer.md
 ```
+
+---
+
+## Constraints on Report Output
+
+- Use the report template above as the base. Factual buffer status observations (e.g., number of accumulated extract rounds) are acceptable.
+- Do NOT explain how Contour's internal mechanisms work, or suggest that extract/sync can modify Core Profile. Core Profile updates are always manual.
+- Do NOT add Contour operational guidance or next-step recommendations beyond buffer status.

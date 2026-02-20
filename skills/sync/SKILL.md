@@ -127,6 +127,9 @@ Sync complete ({date}):
 - Buffer cleared
 ```
 
+After reporting, remind the user:
+> This session is now complete. Do not run `/contour:extract` in this session — the sync conversation would produce echo signals.
+
 ---
 
 ## Deduplication Rules

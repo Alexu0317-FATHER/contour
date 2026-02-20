@@ -41,6 +41,7 @@ Before executing, read the following reference files for format specifications:
 - **Do not load** Domain Log or Core Profile files
 - **Only write** to extract-buffer.md (append, do not overwrite existing content)
 - **Do not judge** deduplication, do not make target file routing decisions — those are `/sync`'s responsibilities
+- **Do not run in a Contour-operational session** — If the current session's primary activity was `/contour:sync`, `/contour:setup`, or other Contour commands, decline to execute and inform the user: "Extract should run in a work session, not a Contour-operational session. The sync conversation would produce echo signals."
 - If the current session has no signals worth extracting, inform the user "No extractable signals in this session" and write nothing
 
 ---
