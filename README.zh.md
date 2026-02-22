@@ -75,47 +75,17 @@ npx skills add Alexu0317-FATHER/contour
 
 经过几次会话，知界会为每个领域建立你的认知状态档案：
 
-```
-# Alex — coder 认知状态
-
-最后同步：2026-02-22
-
-## 认知状态
-
-| 知识点                              | 部分理解 | 已掌握 | 更新    |
-|-------------------------------------|----------|--------|---------|
-| Claude Code session 文件存储结构    |          | ✓      | 2026-02 |
-| MCP server Windows 配置             | ✓        |        | 2026-02 |
-| Claude Code plugin 安装格式         |          | ✓      | 2026-02 |
-
-## 沟通规则
-
-- 涉及 Claude Code 内部机制时，使用文档查证，不依赖记忆
-```
+![Domain State 示例](assets/coder.png)
 
 Claude 在每次会话开始时加载此文件，并据此调整沟通方式——已掌握的概念不会过度解释，部分理解的概念不会跳过必要铺垫。
 
 ### 会话结束后 — /contour:extract
 
-```
-Extract complete (2026-02-22):
-- Topic: API 设计讨论
-- Source: my-project
-- Signals: 2 cognition, 1 thinking, 1 preference
-- Written to extract-buffer.md
-```
+![extract 输出示例](assets/extract.png)
 
 ### 同步到永久状态 — /contour:sync
 
-```
-Sync complete (2026-02-22):
-- Processed: 4 signals from 1 extract block
-- Domain State updated:
-    + environment variables: partial → mastered
-    + Communication Rules: 新增 1 条沟通规则
-- Domain Log appended: 3 entries
-- Buffer cleared
-```
+![sync 输出示例](assets/sync.png)
 
 ## 可用命令
 
