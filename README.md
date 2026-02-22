@@ -95,25 +95,11 @@ Claude loads this file at session start and adjusts how it communicates — no o
 
 ### After a work session — /contour:extract
 
-```
-Extract complete (2026-02-22):
-- Topic: API design discussion
-- Source: my-project
-- Signals: 2 cognition, 1 thinking, 1 preference
-- Written to extract-buffer.md
-```
+![extract output](assets/extract.png)
 
 ### Syncing to permanent state — /contour:sync
 
-```
-Sync complete (2026-02-22):
-- Processed: 4 signals from 1 extract block
-- Domain State updated:
-    + environment variables: partial → mastered
-    + Communication Rules: 1 new rule added
-- Domain Log appended: 3 entries
-- Buffer cleared
-```
+![sync output](assets/sync.png)
 
 ## Available Commands
 
