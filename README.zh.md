@@ -69,6 +69,54 @@ npx skills add Alexu0317-FATHER/contour
 1. **实时监控** — 注入到 `CLAUDE.md` 中的指令会在你工作时检测认知变化，并静默更新领域状态。
 2. **提取与同步** — `/contour:extract` 扫描会话中的认知信号；`/contour:sync` 将它们分发到领域状态和领域日志中。
 
+## 示例
+
+### 领域状态文件长什么样
+
+经过几次会话，知界会为每个领域建立你的认知状态档案：
+
+```
+# Alex — coder 认知状态
+
+最后同步：2026-02-22
+
+## 认知状态
+
+| 知识点                              | 部分理解 | 已掌握 | 更新    |
+|-------------------------------------|----------|--------|---------|
+| Claude Code session 文件存储结构    |          | ✓      | 2026-02 |
+| MCP server Windows 配置             | ✓        |        | 2026-02 |
+| Claude Code plugin 安装格式         |          | ✓      | 2026-02 |
+
+## 沟通规则
+
+- 涉及 Claude Code 内部机制时，使用文档查证，不依赖记忆
+```
+
+Claude 在每次会话开始时加载此文件，并据此调整沟通方式——已掌握的概念不会过度解释，部分理解的概念不会跳过必要铺垫。
+
+### 会话结束后 — /contour:extract
+
+```
+Extract complete (2026-02-22):
+- Topic: API 设计讨论
+- Source: my-project
+- Signals: 2 cognition, 1 thinking, 1 preference
+- Written to extract-buffer.md
+```
+
+### 同步到永久状态 — /contour:sync
+
+```
+Sync complete (2026-02-22):
+- Processed: 4 signals from 1 extract block
+- Domain State updated:
+    + environment variables: partial → mastered
+    + Communication Rules: 新增 1 条沟通规则
+- Domain Log appended: 3 entries
+- Buffer cleared
+```
+
 ## 可用命令
 
 | 命令 | 何时运行 | 作用 |

@@ -67,6 +67,54 @@ Two update mechanisms run in parallel:
 1. **Live monitoring** — Instructions injected into `CLAUDE.md` detect cognitive changes during work and update Domain State silently.
 2. **Extract + sync** — `/contour:extract` scans a session for signals; `/contour:sync` distributes them to Domain State and Domain Log.
 
+## Example
+
+### What your Domain State looks like
+
+After a few sessions, Contour builds a picture of your cognitive state per domain:
+
+```
+# Alex — coder Domain State
+
+Last synced: 2026-02-22
+
+## Cognitive State
+
+| Knowledge Point                          | Partial | Mastered | Updated |
+|------------------------------------------|---------|----------|---------|
+| Claude Code session file structure       |         | ✓        | 2026-02 |
+| MCP server config on Windows             | ✓       |          | 2026-02 |
+| Claude Code plugin install format        |         | ✓        | 2026-02 |
+
+## Communication Rules
+
+- When explaining Claude Code internals, verify against docs — don't rely on memory
+```
+
+Claude loads this file at session start and adjusts how it communicates — no over-explaining mastered concepts, no skipping necessary context for partial ones.
+
+### After a work session — /contour:extract
+
+```
+Extract complete (2026-02-22):
+- Topic: API design discussion
+- Source: my-project
+- Signals: 2 cognition, 1 thinking, 1 preference
+- Written to extract-buffer.md
+```
+
+### Syncing to permanent state — /contour:sync
+
+```
+Sync complete (2026-02-22):
+- Processed: 4 signals from 1 extract block
+- Domain State updated:
+    + environment variables: partial → mastered
+    + Communication Rules: 1 new rule added
+- Domain Log appended: 3 entries
+- Buffer cleared
+```
+
 ## Available Commands
 
 | Command | When to run | What it does |
