@@ -20,12 +20,24 @@ For multi-domain users: inject one entry block per domain (substituting `{domain
 ```
 <!-- Contour -->
 
-Load at session start:
+## Contour Cognitive Tracking System
+
+**Load at session start:**
 - Core Profile: `{AI_INFRA_DIR}/{user}-core.md` — apply as the user's communication profile
 - Domain State: `{AI_INFRA_DIR}/{user}-{domain}.md` — use as cognitive baseline for this session
 - If a referenced file does not exist, alert the user: "Contour files not found at {AI_INFRA_DIR}. Run /contour:setup to initialize." Then continue the session without cognitive tracking.
 
-Monitoring rules: `~/.claude/rules/contour-monitoring.md`
+**Monitoring rules: `~/.claude/rules/contour-monitoring.md`**
+
+**CRITICAL INSTRUCTION — Execute Before Every Response Completes:**
+
+After generating your response content, you MUST execute the Self-Check Protocol in `~/.claude/rules/contour-monitoring.md`:
+1. Review this conversation turn for cognitive signals (patterns defined in the rules file)
+2. If a signal matches, use Edit to update Domain State immediately — before finishing your turn
+3. Do not announce the update; file modifications will be visible in terminal, stay in user's workflow
+4. If no signal detected, end normally
+
+This self-check is not optional. Build it into every response generation cycle.
 
 <!-- End Contour -->
 ```
