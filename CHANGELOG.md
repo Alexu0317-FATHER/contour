@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.2.2] — 2026-02-23
+
+### Changed
+- **Main monitoring mechanism overhaul**: Transformed passive "monitor during session" framing into explicit **Self-Check Protocol** executed before every response completion. Model now treats cognitive signal detection as a mandatory per-turn step, not optional background task.
+- **Trigger pattern definitions expanded** with concrete examples in `contour-monitoring-rules.md`:
+  * Clarity Signal: Explicit understanding markers ("I see", "got it", "makes sense now", etc.)
+  * Mastery Signal: Hands-on competence demonstration (correct application, nuanced follow-ups, debugging with concept)
+  * Regression Signal: Basic question on previously mastered concept ("How do I X again?", "Wait, what was X?")
+  * New Concept Signal: First mention of unfamiliar technical term (user asks "What is X?", "How does X work?")
+- **CLAUDE.md injection strengthened**: Added "CRITICAL INSTRUCTION" section with explicit per-response directive. Changed framing from "refer to rules file" to "you MUST execute this before finishing" — hardened with CRITICAL/mandatory language.
+
+### Rationale
+Previous monitoring rules relied on passive framing unsuited to LLM execution model. LLMs operate request-response, not event-loop. Per-turn self-check protocol bridges this gap by making signal detection an explicit, non-optional step in response generation workflow.
+
+---
+
 ## [0.2.1] — 2026-02-20
 
 ### Fixed
