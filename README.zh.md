@@ -145,15 +145,42 @@ Claude 在每次会话开始时加载此文件，并据此调整沟通方式—�
 
 ## 环境配置与数据文件
 
-默认存储在 `~/.claude/contour/` 目录下。
+知界默认将数据存储在 `~/.claude/contour/` 目录下。所有文件均为纯 Markdown 格式——可读、可编辑，完全属于你。
 
-你可以通过在系统或 `.env` 文件中设置 `$AI_INFRA_DIR` 环境变量来覆盖默认的存储位置：
+### 更改存储位置（可选）
 
-```bash
-export AI_INFRA_DIR="/path/to/your/custom/dir"
-```
+如果你希望将数据同步到云盘（如 OneDrive、百度网盘、iCloud），或者存放在更方便的位置，可以修改默认存储路径。
 
-所有文件都是纯 Markdown 格式 —— 可读、可编辑，且完全属于你。
+**不需要理解背后的原理，按照以下步骤操作即可。**
+
+#### macOS / Linux
+
+1. 用任意文本编辑器打开你的 shell 配置文件：
+   - 使用 Zsh（macOS 默认）：`~/.zshrc`
+   - 使用 Bash：`~/.bashrc`
+
+2. 在文件末尾添加下面这行（将路径替换为你想要的文件夹）：
+   ```bash
+   export AI_INFRA_DIR="/Users/你的用户名/OneDrive/contour"
+   ```
+
+3. 保存文件，然后重启终端（或运行 `source ~/.zshrc`）。
+
+4. 运行 `/contour:setup`，知界会在新路径下创建数据文件。
+
+#### Windows
+
+1. 按 `Win + R`，输入 `sysdm.cpl`，回车。
+2. 点击**高级** → **环境变量**。
+3. 在**用户变量**区域，点击**新建**。
+4. 填写：
+   - 变量名：`AI_INFRA_DIR`
+   - 变量值：`C:\Users\你的用户名\OneDrive\contour`（填写实际路径）
+5. 点击确定保存。
+6. **重启 Claude Code** 使配置生效。
+7. 运行 `/contour:setup`，知界会在新路径下创建数据文件。
+
+> **注意：** 如果你在修改路径之前已经运行过 `/contour:setup`，原有数据文件不会自动迁移。你需要手动将 `~/.claude/contour/` 下的文件复制到新目录，或者重新运行 `/contour:setup` 在新路径下初始化。
 
 ## 自定义
 

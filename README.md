@@ -159,15 +159,42 @@ Removes Contour from your workspace.
 
 ## Environment Configuration & Data Files
 
-Stored at `~/.claude/contour/` by default. 
+Contour stores your data at `~/.claude/contour/` by default. All files are plain Markdown — readable, editable, and yours.
 
-You can override the default storage location by setting the `$AI_INFRA_DIR` environment variable in your system or `.env` file:
+### Changing the storage location (optional)
 
-```bash
-export AI_INFRA_DIR="/path/to/your/custom/dir"
-```
+You might want to move the storage folder if you'd like to sync it with a cloud drive (e.g., OneDrive, Dropbox, iCloud) or keep it somewhere more accessible.
 
-All files are plain Markdown — readable, editable, and yours.
+**You don't need to understand how this works — just follow the steps for your OS.**
+
+#### macOS / Linux
+
+1. Open your shell config file in any text editor:
+   - If you use Zsh (default on macOS): `~/.zshrc`
+   - If you use Bash: `~/.bashrc`
+
+2. Add this line at the end of the file (replace the path with your chosen folder):
+   ```bash
+   export AI_INFRA_DIR="/Users/yourname/Library/CloudStorage/OneDrive/contour"
+   ```
+
+3. Save the file, then restart your terminal (or run `source ~/.zshrc`).
+
+4. Run `/contour:setup` — Contour will create the data files in your new folder.
+
+#### Windows
+
+1. Press `Win + R`, type `sysdm.cpl`, and press Enter.
+2. Click **Advanced** → **Environment Variables**.
+3. Under **User variables**, click **New**.
+4. Set:
+   - Variable name: `AI_INFRA_DIR`
+   - Variable value: `C:\Users\YourName\OneDrive\contour` (use your actual path)
+5. Click OK to save.
+6. **Restart Claude Code** for the change to take effect.
+7. Run `/contour:setup` — Contour will create the data files in your new folder.
+
+> **Note:** If you already ran `/contour:setup` before changing the path, your existing data files won't move automatically. You'll need to manually copy the files from `~/.claude/contour/` to your new folder, or run `/contour:setup` again to create fresh files in the new location.
 
 ## Customization
 

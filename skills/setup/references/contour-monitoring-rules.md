@@ -18,10 +18,11 @@ This check is mandatory every turn. It takes ~30 seconds of reasoning. Build it 
 
 **Trigger patterns** (if ANY match, a cognitive signal is detected):
 
-1. **Clarity Signal** — User explicitly signals understanding after confusion:
-   - Patterns: "I see", "got it", "makes sense now", "that makes sense", "ah, I understand now", "ok, I see how that works"
-   - Meaning: User transitioned from not-understanding to partial understanding of concept X
-   - Action: If X is in Domain State, move to `partial` status
+1. **Inquiry Signal** — User asks a conceptual question about X this turn, and you answered it:
+   - Patterns: "What is X?", "How does X work?", "What's the difference between X and Y?", "Why does X behave this way?", "I don't understand X"
+   - Meaning: User encountered a concept gap; your explanation this turn constitutes initial exposure
+   - Action: If X is not in Domain State → add new row with `partial` status. If already `partial` → no change.
+   - **Do NOT wait for the user to say "明白了" or any acknowledgment — the question itself is sufficient.**
 
 2. **Mastery Signal** — User demonstrates hands-on competence without prompting:
    - Patterns: User correctly applies concept X in code/work, asks nuanced follow-ups, suggests improvements, debugs using that concept
@@ -31,12 +32,11 @@ This check is mandatory every turn. It takes ~30 seconds of reasoning. Build it 
 3. **Regression Signal** — User asks a basic/foundational question about something already marked `mastered`:
    - Patterns: "How do I X again?", "Wait, what was X?", basic question that contradicts prior demonstrated understanding
    - Meaning: Knowledge degradation or context reset (user forgot, or concept was fragile)
-   - Action: Move X from `mastered` back to `partial`, flag in Domain Log
+   - Action: Move X from `mastered` back to `partial`
 
-4. **New Concept Signal** — User mentions an unfamiliar technical/domain concept for the first time:
-   - Patterns: User asks "What is X?", "How does X work?", "I don't understand X"
-   - Meaning: Identified a concept not yet in Domain State
-   - Action: Add new row to Domain State with status `partial` (initial exposure)
+4. **Clarity Signal** — User explicitly confirms understanding (secondary path, for cases where no question was asked):
+   - Patterns: "I see", "got it", "makes sense now", "ah, I understand now"
+   - Action: If X is identifiable from context and not yet in Domain State, add with `partial` status
 
 **Update action**:
 1. Find concept X in Domain State table. If not present, add new row.
@@ -45,10 +45,10 @@ This check is mandatory every turn. It takes ~30 seconds of reasoning. Build it 
 4. Execute silently — no explanations, no file read-back confirmations.
 
 **Do NOT trigger on**:
-- Purely operational questions ("How do I spell this command?")
-- AI explaining concepts the user didn't ask about
+- Operational questions: syntax details, command spelling, flag names ("What flag do I use for X?", "How do I spell this command?")
+- AI explaining concepts the user did not ask about
 - Concepts already at the correct status (no change = no update)
-- Rhetorical understanding markers ("That's wild", "cool", "interesting" — these are engagement, not understanding)
+- Rhetorical responses ("That's wild", "cool", "interesting" — engagement, not understanding)
 
 ### [preference] → Update Domain State Communication Rules
 

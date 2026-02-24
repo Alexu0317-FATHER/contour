@@ -209,6 +209,36 @@ Substitute placeholders in the entry block:
 - `{user}` → value from Step 3
 - `{domain}` → value from Step 5
 
+**8c — Add SessionStart hook to settings.json**
+
+Target file: `~/.claude/settings.json`
+
+This hook injects Core Profile and Domain State content into Claude's context at every session start, ensuring deterministic loading instead of relying on passive instruction text.
+
+1. Read `~/.claude/settings.json` (if the file does not exist, start with `{}`)
+2. Parse the JSON content
+3. Locate or create the `hooks.SessionStart` array
+4. Check if a Contour SessionStart hook already exists (look for a command string containing the resolved `{AI_INFRA_DIR}` path):
+   - If found: replace it with the new entry (idempotent re-run)
+   - If not found: append the new entry to the array
+5. The hook entry to add (substitute all placeholders with resolved values from Steps 2, 3, 5):
+
+```json
+{
+  "matcher": "startup|resume",
+  "hooks": [
+    {
+      "type": "command",
+      "command": "cat {AI_INFRA_DIR}/{user}-core.md && echo '---' && cat {AI_INFRA_DIR}/{user}-{domain}.md"
+    }
+  ]
+}
+```
+
+6. Write the merged result back to `~/.claude/settings.json`
+
+Important: preserve all existing content in settings.json — only add to or replace within the `SessionStart` array. Do not touch other hooks or settings keys.
+
 ---
 
 ### Step 9 — Report
@@ -225,7 +255,8 @@ Files created:
 - Domain Log:      {AI_INFRA_DIR}/{user}-{domain}-log.md
 - Extract Buffer:  {AI_INFRA_DIR}/extract-buffer.md
 
-CLAUDE.md updated:  ~/.claude/CLAUDE.md
+CLAUDE.md updated:    ~/.claude/CLAUDE.md
+settings.json updated: ~/.claude/settings.json (SessionStart hook added)
 
 ⚠️  RESTART REQUIRED
 The monitoring instruction won't take effect until you restart Claude Code.
@@ -247,7 +278,8 @@ Contour 设置完成（{date}）：
 - Domain Log：     {AI_INFRA_DIR}/{user}-{domain}-log.md
 - Extract Buffer： {AI_INFRA_DIR}/extract-buffer.md
 
-CLAUDE.md 已更新：  ~/.claude/CLAUDE.md
+CLAUDE.md 已更新：      ~/.claude/CLAUDE.md
+settings.json 已更新：  ~/.claude/settings.json（已添加 SessionStart hook）
 
 ⚠️  需要重启
 监控指令在重启 Claude Code 后才会生效。

@@ -36,7 +36,19 @@ Target file: `~/.claude/CLAUDE.md`
 4. If not found: note "No Contour injection found in CLAUDE.md" and continue
 5. Write the updated file back
 
-**2b — Delete rules file**
+**2b — Remove SessionStart hook from settings.json**
+
+Target file: `~/.claude/settings.json`
+
+1. If the file does not exist: skip silently
+2. Read and parse the file
+3. In `hooks.SessionStart`, find the entry whose `command` contains the Contour data directory path (e.g., `.claude/contour` or the resolved `$AI_INFRA_DIR`)
+4. If found: remove that entry from the array
+5. If the `SessionStart` array is now empty: remove the `SessionStart` key
+6. If the `hooks` object is now empty: remove the `hooks` key
+7. Write the updated file back
+
+**2c — Delete rules file**
 
 Target file: `~/.claude/rules/contour-monitoring.md`
 
@@ -74,6 +86,7 @@ Options: **Yes, delete data files** / **No, keep data files**
 Contour uninstall complete ({date}):
 
 CLAUDE.md:     injection block removed (restart Claude Code to take effect)
+settings.json: SessionStart hook removed
 Data files:    {deleted / kept at {path}}
 
 Next step:
