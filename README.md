@@ -165,8 +165,6 @@ Contour stores your data at `~/.claude/contour/` by default. All files are plain
 
 You might want to move the storage folder if you'd like to sync it with a cloud drive (e.g., OneDrive, Dropbox, iCloud) or keep it somewhere more accessible.
 
-**You don't need to understand how this works — just follow the steps for your OS.**
-
 #### macOS / Linux
 
 1. Open your shell config file in any text editor:
