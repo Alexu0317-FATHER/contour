@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.3] — 2026-02-24
+
+### Changed
+- **Monitoring trigger upgraded**: Inquiry Signal is now the primary cognition trigger. Conceptual questions ("What is X?", "How does X work?") fire immediately when answered — no longer waiting for user acknowledgment ("明白了"). Clarity Signal demoted to secondary fallback.
+- **setup Step 8c added**: `/contour:setup` now writes a `SessionStart` hook to `~/.claude/settings.json`, ensuring Core Profile and Domain State are loaded deterministically at every session start via system-level hook rather than passive CLAUDE.md instruction.
+- **uninstall updated**: `/contour:uninstall` now removes the Contour `SessionStart` hook from `settings.json` as part of cleanup.
+
+### Improved
+- README (EN/ZH): Added beginner-friendly guide for customizing storage location via `$AI_INFRA_DIR`, with step-by-step instructions for macOS/Linux and Windows.
+
+---
+
 ## [0.2.2] — 2026-02-23
 
 ### Changed
