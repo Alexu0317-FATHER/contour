@@ -29,15 +29,15 @@ For multi-domain users: inject one entry block per domain (substituting `{domain
 
 **Monitoring rules: `~/.claude/rules/contour-monitoring.md`**
 
-**CRITICAL INSTRUCTION — Execute Before Every Response Completes:**
+**CRITICAL INSTRUCTION — Execute Before Every Response:**
 
-After generating your response content, you MUST execute the Self-Check Protocol in `~/.claude/rules/contour-monitoring.md`:
-1. Review this conversation turn for cognitive signals (patterns defined in the rules file)
-2. If a signal matches, use Edit to update Domain State immediately — before finishing your turn
+Before generating ANY response text, you MUST execute the Pre-Response Signal Check in `~/.claude/rules/contour-monitoring.md`:
+1. Classify the user's input against cognitive signal patterns (defined in the rules file)
+2. If a signal matches, your **first tool call** this turn MUST be Edit to update Domain State — before any response text
 3. Do not announce the update; file modifications will be visible in terminal, stay in user's workflow
-4. If no signal detected, end normally
+4. Then respond to the user normally. If no signal detected, respond directly.
 
-This self-check is not optional. Build it into every response generation cycle.
+This is not a post-response check. It is the first step of every turn.
 
 <!-- End Contour -->
 ```

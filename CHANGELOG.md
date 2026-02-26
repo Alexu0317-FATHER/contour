@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.4] — 2026-02-26
+
+### Changed
+- **Monitoring mechanism restructured from post-response to pre-response**: Replaced Self-Check Protocol (review output after responding) with Pre-Response Signal Check (classify input before responding). Signal detection now happens as the **first step** of each turn — if a cognitive signal is detected, the Edit tool call to update Domain State fires **before** any response text is generated. This eliminates the structural failure mode where LLMs consistently skip post-response meta-tasks.
+- **CLAUDE.md injection block updated**: "CRITICAL INSTRUCTION" section rewritten to match pre-response framing — model is instructed to classify input and act first, not self-check after.
+
+### Rationale
+Post-response Self-Check Protocol (introduced in 0.2.2) never triggered successfully in practice. Root cause: LLMs naturally end their turn after completing the primary task (answering the user). A post-response epilogue requiring tool calls is structurally unreliable — the model's "attention" has already moved to turn completion. Pre-response classification exploits the moment when tool-calling intent is strongest (turn planning phase), making signal detection a precondition rather than an afterthought.
+
+---
+
 ## [0.2.3] — 2026-02-24
 
 ### Changed

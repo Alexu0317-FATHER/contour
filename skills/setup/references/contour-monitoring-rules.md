@@ -1,28 +1,29 @@
 # Contour Monitoring Rules
 
-**Critical**: Before finishing EVERY response, execute the Self-Check Protocol below. Do not skip this step.
+**Critical**: Before generating ANY response text, classify the user's input against the signal patterns below. If a signal is detected, your **first action** in this turn MUST be an Edit tool call to update Domain State. Do not generate response text until the Edit is complete.
+
 Do not proactively announce each update — file writes are visible in the terminal, but do not interrupt the conversation to report them. Stay in the user's workflow.
 
-## Self-Check Protocol
+## Pre-Response Signal Check
 
-After generating your response content but BEFORE ending your turn:
+When you receive a user message, execute this sequence:
 
-1. **Scan this conversation turn** — Review what the user said and how you responded
-2. **Match against trigger patterns** (see sections below) — Determine if a cognitive signal was detected
-3. **If signal detected** → Update Domain State immediately using Edit tool
-4. **If no signal** → End normally, no file write needed
+1. **Classify input** — Match the user's message against trigger patterns below
+2. **If signal detected** → Edit Domain State as your **first tool call** this turn, before any response text
+3. **Then respond** to the user normally
+4. **If no signal** → Respond normally, no file write needed
 
-This check is mandatory every turn. It takes ~30 seconds of reasoning. Build it into your response generation workflow.
+This is not a self-check or afterthought. It is the **first step** of every turn, executed at the moment you are planning your response — when tool-calling intent is strongest.
 
 ### [cognition] → Update Domain State table
 
 **Trigger patterns** (if ANY match, a cognitive signal is detected):
 
-1. **Inquiry Signal** — User asks a conceptual question about X this turn, and you answered it:
-   - Patterns: "What is X?", "How does X work?", "What's the difference between X and Y?", "Why does X behave this way?", "I don't understand X"
-   - Meaning: User encountered a concept gap; your explanation this turn constitutes initial exposure
+1. **Inquiry Signal** — User asks a conceptual question about X:
+   - Patterns: "What is X?", "How does X work?", "What's the difference between X and Y?", "Why does X behave this way?", "I don't understand X", "Explain X", "Introduce X to me"
+   - Meaning: User encountered a concept gap; your explanation constitutes initial exposure
    - Action: If X is not in Domain State → add new row with `partial` status. If already `partial` → no change.
-   - **Do NOT wait for the user to say "明白了" or any acknowledgment — the question itself is sufficient.**
+   - **Do NOT wait for the user to say "got it" or any acknowledgment — the question itself is sufficient.**
 
 2. **Mastery Signal** — User demonstrates hands-on competence without prompting:
    - Patterns: User correctly applies concept X in code/work, asks nuanced follow-ups, suggests improvements, debugs using that concept
@@ -40,7 +41,7 @@ This check is mandatory every turn. It takes ~30 seconds of reasoning. Build it 
 
 **Update action**:
 1. Find concept X in Domain State table. If not present, add new row.
-2. Update status and date: `| {concept} | {status} | 2026-02 |`
+2. Update status and date: `| {concept} | {status} | YYYY-MM |`
 3. Use Edit tool to modify `{user}-{domain}.md` directly.
 4. Execute silently — no explanations, no file read-back confirmations.
 
