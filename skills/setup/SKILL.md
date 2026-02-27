@@ -241,6 +241,83 @@ Important: preserve all existing content in settings.json — only add to or rep
 
 ---
 
+**8d — Install cognitive monitor hook**
+
+This hook classifies every conversation turn for cognitive signals and automatically updates Domain State — no manual `/extract` or `/sync` needed.
+
+**Step 1: Install hook script**
+
+Copy `hooks/cognitive-monitor.ts` from the plugin directory to `{AI_INFRA_DIR}/hooks/cognitive-monitor.ts`.
+- Create `{AI_INFRA_DIR}/hooks/` if it does not exist
+- If the file already exists: overwrite (script may have been updated)
+
+**Step 2: Detect Git Bash path (Windows only)**
+
+On Windows, the `claude` CLI requires a Git Bash path. Detect it:
+
+```bash
+# Try common locations
+for path in \
+  "C:\\Program Files\\Git\\bin\\bash.exe" \
+  "C:\\Program Files (x86)\\Git\\bin\\bash.exe" \
+  "D:\\Program Files\\Git\\bin\\bash.exe" \
+  "D:\\Program Files (x86)\\Git\\bin\\bash.exe"; do
+  [ -f "$path" ] && echo "$path" && break
+done
+```
+
+Record as `{GIT_BASH_PATH}`. On macOS/Linux, leave empty.
+
+**Step 3: Detect bun path**
+
+```bash
+which bun 2>/dev/null || echo "$HOME/.bun/bin/bun"
+```
+
+Record as `{BUN_PATH}`. If bun is not installed, warn the user:
+> ⚠️ bun is not installed. The cognitive monitor requires bun to run. Install it from https://bun.sh before proceeding.
+
+**Step 4: Register Stop hook in settings.json**
+
+1. Read `~/.claude/settings.json`
+2. Locate or create the `hooks.Stop` array
+3. Check if a Contour Stop hook already exists (look for `cognitive-monitor.ts` in the command string):
+   - If found: replace it (idempotent re-run)
+   - If not found: append
+4. The hook entry to add:
+
+**On macOS/Linux:**
+```json
+{
+  "matcher": "*",
+  "hooks": [
+    {
+      "type": "command",
+      "command": "{BUN_PATH} run {AI_INFRA_DIR}/hooks/cognitive-monitor.ts {AI_INFRA_DIR}/{user}-{domain}.md"
+    }
+  ]
+}
+```
+
+**On Windows** (include Git Bash path as third argument, use Windows backslash paths):
+```json
+{
+  "matcher": "*",
+  "hooks": [
+    {
+      "type": "command",
+      "command": "{BUN_PATH} run {AI_INFRA_DIR}/hooks/cognitive-monitor.ts {AI_INFRA_DIR}/{user}-{domain}.md '{GIT_BASH_PATH}'"
+    }
+  ]
+}
+```
+
+5. Write merged result back to `~/.claude/settings.json`
+
+Important: preserve all existing content — only add to or replace within the `Stop` array.
+
+---
+
 ### Step 9 — Report
 
 Render the report in the selected language.
@@ -256,16 +333,16 @@ Files created:
 - Extract Buffer:  {AI_INFRA_DIR}/extract-buffer.md
 
 CLAUDE.md updated:    ~/.claude/CLAUDE.md
-settings.json updated: ~/.claude/settings.json (SessionStart hook added)
+settings.json updated: ~/.claude/settings.json (SessionStart + Stop hooks added)
+Cognitive monitor:    {AI_INFRA_DIR}/hooks/cognitive-monitor.ts
 
 ⚠️  RESTART REQUIRED
 The monitoring instruction won't take effect until you restart Claude Code.
 
 Next steps:
 1. Restart Claude Code now
-2. Work normally — Contour tracks cognitive changes in the background
-3. After a significant session, run /contour:extract to capture signals
-4. When ready, run /contour:sync in a new session to update your files
+2. Work normally — Contour automatically tracks cognitive changes after every response
+3. (Optional) Run /contour:extract + /contour:sync if you want to capture signals from past sessions
 ```
 
 **Chinese:**
@@ -279,14 +356,14 @@ Contour 设置完成（{date}）：
 - Extract Buffer： {AI_INFRA_DIR}/extract-buffer.md
 
 CLAUDE.md 已更新：      ~/.claude/CLAUDE.md
-settings.json 已更新：  ~/.claude/settings.json（已添加 SessionStart hook）
+settings.json 已更新：  ~/.claude/settings.json（已添加 SessionStart + Stop hook）
+认知监测脚本：          {AI_INFRA_DIR}/hooks/cognitive-monitor.ts
 
 ⚠️  需要重启
 监控指令在重启 Claude Code 后才会生效。
 
 后续步骤：
 1. 现在重启 Claude Code
-2. 正常工作——Contour 在后台追踪认知变化
-3. 完成有价值的会话后，运行 /contour:extract 捕捉信号
-4. 准备好时，在新会话中运行 /contour:sync 更新文件
+2. 正常工作——Contour 在每轮对话结束后自动追踪认知变化
+3. （可选）如需捕捉过往 session 的信号，可运行 /contour:extract + /contour:sync
 ```

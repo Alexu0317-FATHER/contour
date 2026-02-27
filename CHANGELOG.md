@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.2.5] — 2026-02-27
+
+### Added
+- **Stop hook — cognitive-monitor.ts**: Active cognitive monitoring now runs as a system-level Stop hook after every assistant response. A bun TypeScript script reads the conversation transcript, calls `claude -p --model haiku` for semantic signal classification, and writes directly to Domain State when a signal is detected. No LLM self-check involved — execution is deterministic.
+- **Anti-recursion mechanism**: Hook sets `CONTOUR_MONITOR_ACTIVE=1` in the environment before calling the inner claude process. Inner Stop hook detects this variable and exits immediately, preventing infinite recursion.
+- **Windows support**: Git Bash path passed as third CLI argument; `CLAUDECODE` env var unset to allow nested claude invocation.
+- **setup Step 8d**: `/contour:setup` now installs `cognitive-monitor.ts` to `{AI_INFRA_DIR}/hooks/` and registers the Stop hook in `~/.claude/settings.json` (idempotent).
+- **uninstall updated**: `/contour:uninstall` now removes the Stop hook from `settings.json` and deletes the hook script.
+
+### Changed
+- **Daily workflow simplified**: `/contour:extract` and `/contour:sync` are now optional fallback tools. The Stop hook handles real-time monitoring automatically.
+- **Runtime dependency**: `bun` is now required for the cognitive monitor hook. Users without bun installed will see a warning during setup.
+
+### Rationale
+Pre-response prompt instruction (0.2.4) improved signal detection timing but remained unreliable — the model still controlled execution. Moving to a Stop hook eliminates LLM compliance as a variable entirely: the hook fires unconditionally after every response, and classification is handled by a separate Haiku call rather than the responding model's self-assessment.
+
+---
+
 ## [0.2.4] — 2026-02-26
 
 ### Changed
