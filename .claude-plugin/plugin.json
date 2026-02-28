@@ -1,6 +1,6 @@
 {
   "name": "contour",
-  "version": "0.1.0",
+  "version": "0.2.5",
   "description": "Contour (知界) — Fine-grained cognitive boundary tracking for Claude Code.",
   "author": {
     "name": "Alex"
