@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.3.0] — 2026-03-03
+
+### Changed
+- **Domain Log removed**: `/contour:sync` no longer writes to a Domain Log file. `[thinking]` patterns are now surfaced directly in the sync report; `[core-candidate]` entries prompt the user to decide immediately rather than deferring to a file.
+- **Clarity Signal removed**: All cognitive signal logic now uses Inquiry Signal as the sole `partial` trigger. User acknowledgment ("got it", "I see") is inconsistent and unreliable as a signal baseline.
+- **Slash command guard**: `cognitive-monitor.ts` now exits immediately for any userMessage starting with `/`, before calling Haiku — hard filter at script level.
+- **extract/sync positioning corrected**: Reframed from "optional fallback" to "historical session backfill" — the Stop hook covers the active session; extract/sync cover past sessions that predate hook installation.
+- **README install guide corrected**: Claude Code UI steps updated to match actual flow (Marketplaces → Add Marketplace → Discover tab → install scope selection).
+
+### Removed
+- `skills/sync/references/domain-log-structure.md` (moved to `docs/references/` for reference)
+- Domain Log file creation from `/contour:setup` (Step 6 removed, steps renumbered)
+- Domain Log deletion from `/contour:uninstall`
+
+---
+
 ## [0.2.5] — 2026-02-27
 
 ### Added
