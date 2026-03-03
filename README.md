@@ -20,27 +20,13 @@ Most AI tools treat you as either an expert or a beginner. Contour tracks exactl
 npx skills add Alexu0317-FATHER/contour
 ```
 
-### Register as Plugin Marketplace
+### Install in Claude Code
 
-Run the following command in Claude Code:
-
-```bash
-/plugin marketplace add Alexu0317-FATHER/contour
-```
-
-### Install Skills
-
-**Option 1: Via Browse UI**
 1. Run `/plugin` in Claude Code
-2. Select `Browse and install plugins`
-3. Select `contour`
-4. Select the plugin(s) you want to install
-5. Select `Install now`
-
-**Option 2: Direct Install**
-```bash
-/plugin install contour@Alexu0317-FATHER/contour
-```
+2. Switch to the `Marketplaces` tab
+3. Select `Add Marketplace`, enter `Alexu0317-FATHER/contour`
+4. It will switch back to the `Discover` tab, listing the plugins in contour
+5. Select `Install for you (user scope)` so Contour works across all your sessions
 
 ## Update Skills
 
@@ -59,13 +45,12 @@ Contour uses four local files per domain:
 
 - **Core Profile** (`{user}-core.md`) — Your communication profile. Loaded globally, rarely changes.
 - **Domain State** (`{user}-{domain}.md`) — Your cognitive state snapshot for a domain. Updated continuously.
-- **Domain Log** (`{user}-{domain}-log.md`) — Append-only audit log. For your review only.
 - **Extract Buffer** (`extract-buffer.md`) — Cross-session signal buffer.
 
-Two update mechanisms run in parallel:
+Two update mechanisms work at different time scales:
 
-1. **Live monitoring** — Instructions injected into `CLAUDE.md` detect cognitive changes during work and update Domain State silently.
-2. **Extract + sync** — `/contour:extract` scans a session for signals; `/contour:sync` distributes them to Domain State and Domain Log.
+1. **Live monitoring (current session)** — A Stop hook fires after every assistant response, calls a lightweight Haiku model to classify your message for cognitive signals, and writes directly to Domain State. Fully automatic — no user action needed. A `CLAUDE.md` prompt layer provides backup coverage if hooks are unavailable.
+2. **Historical backfill (past sessions)** — `/contour:extract` scans a past session for signals the hook didn't cover; `/contour:sync` distributes them to Domain State. Run manually when needed.
 
 ## Example
 
@@ -105,9 +90,9 @@ Claude loads this file at session start and adjusts how it communicates — no o
 
 | Command | When to run | What it does |
 |---------|-------------|--------------|
-| `/contour:setup` | Once, after install | Initializes your Core Profile, Domain State, Domain Log, and Extract Buffer files and injects monitoring into `CLAUDE.md` |
+| `/contour:setup` | Once, after install | Initializes your Core Profile, Domain State, and Extract Buffer files and injects monitoring into `CLAUDE.md` |
 | `/contour:extract` | End of a significant session | Scans the session for cognitive signals, writes to buffer |
-| `/contour:sync` | In a new dedicated session | Reads buffer, updates Domain State and Domain Log, clears buffer |
+| `/contour:sync` | In a new dedicated session | Reads buffer, updates Domain State, surfaces thinking patterns and core candidates, clears buffer |
 | `/contour:uninstall` | When you want to remove Contour | Removes monitoring injection from `CLAUDE.md`, optionally deletes data files |
 
 ### /contour:setup
@@ -143,7 +128,7 @@ Synchronizes extracted signals into your permanent cognitive state.
 ```
 
 **When to use:**
-Run this in a new, dedicated session (to avoid context pollution). It reads the `Extract Buffer`, updates your `Domain State` and `Domain Log`, and then clears the buffer.
+Run this in a new, dedicated session (to avoid context pollution). It reads the `Extract Buffer`, updates your `Domain State`, surfaces any thinking patterns and Core Profile candidates for your review, and then clears the buffer.
 
 ### /contour:uninstall
 

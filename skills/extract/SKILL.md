@@ -29,7 +29,6 @@ Before executing, read the following reference files for format specifications:
 |------|------|------|--------|
 | `extract-buffer.md` | Extract Buffer | Temporary buffer: write extracted signals | Append |
 | `{user}-{domain}.md` | Domain State | Current cognitive state for the domain | Read only |
-| `{user}-{domain}-log.md` | Domain Log | Append-only audit log for human review | (not accessed) |
 | `{user}-core.md` | Core Profile | Personality-level traits, thinking patterns, core preferences | (not accessed) |
 
 ---
@@ -38,7 +37,7 @@ Before executing, read the following reference files for format specifications:
 
 - **Read** the conversation content of the current session
 - **Read** the corresponding Domain State file (e.g., `{user}-coder.md`) for cognitive state comparison
-- **Do not load** Domain Log or Core Profile files
+- **Do not load** Core Profile files
 - **Only write** to extract-buffer.md (append, do not overwrite existing content)
 - **Do not judge** deduplication, do not make target file routing decisions — those are `/sync`'s responsibilities
 - **Do not run in a Contour-operational session** — If the current session's primary activity was `/contour:sync`, `/contour:setup`, or other Contour commands, decline to execute and inform the user: "Extract should run in a work session, not a Contour-operational session. The sync conversation would produce echo signals."
@@ -53,7 +52,7 @@ Before executing, read the following reference files for format specifications:
 Record changes or exposures in the user's cognitive state regarding a specific knowledge point. **Compare against Domain State** to determine whether observed behavior represents a state change.
 
 **Extraction conditions** (any one is sufficient):
-- The user listened to AI's explanation and expressed initial understanding ("I see", "got it", "makes sense now") → `partial` (cognitive exposure, not mastery)
+- The user asked a conceptual question about X ("What is X?", "How does X work?", "Explain X", "I don't understand X") → `partial` (the question itself signals a knowledge gap; no confirmation needed)
 - The user indicated they already know something AI was explaining ("I know this", "skip the explanation", "no need to explain") → `mastered`
 - The user demonstrated **behavioral mastery**: correctly used a concept/tool/process in a practical context (e.g., giving the instruction "submit this as a PR" when PR submission was previously marked as partial in Domain State) → `mastered`
 - The user asked a basic question about a knowledge point that is marked as `mastered` in Domain State → `partial` (cognitive regression)

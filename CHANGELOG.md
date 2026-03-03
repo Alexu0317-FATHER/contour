@@ -10,7 +10,7 @@
 - **uninstall updated**: `/contour:uninstall` now removes the Stop hook from `settings.json` and deletes the hook script.
 
 ### Changed
-- **Daily workflow simplified**: `/contour:extract` and `/contour:sync` are now optional fallback tools. The Stop hook handles real-time monitoring automatically.
+- **Daily workflow simplified**: `/contour:extract` and `/contour:sync` now serve **historical session backfill** — the Stop hook monitors the active session in real time, while extract/sync cover past sessions that predate hook installation or weren't covered by it.
 - **Runtime dependency**: `bun` is now required for the cognitive monitor hook. Users without bun installed will see a warning during setup.
 
 ### Rationale
@@ -32,7 +32,7 @@ Post-response Self-Check Protocol (introduced in 0.2.2) never triggered successf
 ## [0.2.3] — 2026-02-24
 
 ### Changed
-- **Monitoring trigger upgraded**: Inquiry Signal is now the primary cognition trigger. Conceptual questions ("What is X?", "How does X work?") fire immediately when answered — no longer waiting for user acknowledgment ("明白了"). Clarity Signal demoted to secondary fallback.
+- **Monitoring trigger upgraded**: Inquiry Signal is now the sole cognition trigger. Conceptual questions ("What is X?", "How does X work?") fire immediately — Clarity Signal removed entirely (user acknowledgment is inconsistent and unreliable as a signal).
 - **setup Step 8c added**: `/contour:setup` now writes a `SessionStart` hook to `~/.claude/settings.json`, ensuring Core Profile and Domain State are loaded deterministically at every session start via system-level hook rather than passive CLAUDE.md instruction.
 - **uninstall updated**: `/contour:uninstall` now removes the Contour `SessionStart` hook from `settings.json` as part of cleanup.
 

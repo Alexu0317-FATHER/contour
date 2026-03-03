@@ -1,6 +1,6 @@
 ---
 name: setup
-description: "Cold-start initialization: generate Core Profile, Domain State, Domain Log, and Extract Buffer files, inject CLAUDE.md monitoring instructions. Run once per user, or to reset."
+description: "Cold-start initialization: generate Core Profile, Domain State, and Extract Buffer files, inject CLAUDE.md monitoring instructions. Run once per user, or to reset."
 disable-model-invocation: true
 allowed-tools: "Read, Write, Edit, Glob, Bash, AskUserQuestion"
 ---
@@ -25,9 +25,7 @@ Before executing, read the following reference files:
 - For all free-text inputs: if the user submits an empty or near-empty response (whitespace, single character), re-prompt once with a brief example of what's expected.
 - If the user selects "Other" for any `AskUserQuestion`, immediately follow up: "Please describe:" and wait for their input. If they provide nothing, skip the item and proceed.
 
-**Domain State and Domain Log file initial structures** — use the template matching the language selected in Step 1. Do not cross-reference sync skill files.
-
-**Domain State file (English):**
+**Domain State file initial structure** — use the template matching the language selected in Step 1. Do not cross-reference sync skill files.**Domain State file (English):**
 ```
 # {User} — {Domain} Domain State
 
@@ -59,31 +57,13 @@ Last synced: (not yet synced)
 - （待积累沟通偏好后填入）
 ```
 
-**Domain Log file (English):**
-```
-# {User} — {Domain} Domain Log
-
----
-
-(Entries will be appended here by /contour:sync)
-```
-
-**Domain Log file (Chinese):**
-```
-# {User} — {Domain} 领域日志
-
----
-
-（由 /contour:sync 追加记录）
-```
-
 ---
 
 ## Pre-flight
 
 Check whether the data directory already exists:
 - If `~/.claude/contour/` (or `$AI_INFRA_DIR` if set) **exists and contains files** → ask (AskUserQuestion):
-  > "Contour data already exists. Running setup will overwrite your Core Profile, Domain State, and Domain Log files. (extract-buffer.md will be preserved.) Continue?"
+  > "Contour data already exists. Running setup will overwrite your Core Profile and Domain State files. (extract-buffer.md will be preserved.) Continue?"
   > Options: "Yes, overwrite" / "No, cancel"
   - If "No, cancel" → STOP
 - If the directory **does not exist** → proceed directly to Step 1
@@ -164,13 +144,7 @@ Create `{AI_INFRA_DIR}/{user}-{domain}.md` using the Domain State initial struct
 
 ---
 
-### Step 6 — Generate Domain Log
-
-Create `{AI_INFRA_DIR}/{user}-{domain}-log.md` using the Domain Log initial structure above.
-
----
-
-### Step 7 — Create Extract Buffer
+### Step 6 — Create Extract Buffer
 
 Create `{AI_INFRA_DIR}/extract-buffer.md` with:
 ```
@@ -184,7 +158,7 @@ If the file already exists **and has content**: warn the user and skip — do no
 
 ---
 
-### Step 8 — Write rules file and inject CLAUDE.md
+### Step 7 — Write rules file and inject CLAUDE.md
 
 Read `references/claude-md-injection.md` for full instructions. Two actions:
 
@@ -318,7 +292,7 @@ Important: preserve all existing content — only add to or replace within the `
 
 ---
 
-### Step 9 — Report
+### Step 8 — Report
 
 Render the report in the selected language.
 
@@ -329,7 +303,6 @@ Contour setup complete ({date}):
 Files created:
 - Core Profile:    {AI_INFRA_DIR}/{user}-core.md
 - Domain State:    {AI_INFRA_DIR}/{user}-{domain}.md
-- Domain Log:      {AI_INFRA_DIR}/{user}-{domain}-log.md
 - Extract Buffer:  {AI_INFRA_DIR}/extract-buffer.md
 
 CLAUDE.md updated:    ~/.claude/CLAUDE.md
@@ -352,7 +325,6 @@ Contour 设置完成（{date}）：
 已创建文件：
 - Core Profile：   {AI_INFRA_DIR}/{user}-core.md
 - Domain State：   {AI_INFRA_DIR}/{user}-{domain}.md
-- Domain Log：     {AI_INFRA_DIR}/{user}-{domain}-log.md
 - Extract Buffer： {AI_INFRA_DIR}/extract-buffer.md
 
 CLAUDE.md 已更新：      ~/.claude/CLAUDE.md

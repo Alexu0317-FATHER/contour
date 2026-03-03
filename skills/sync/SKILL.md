@@ -1,6 +1,6 @@
 ---
 name: sync
-description: "Read extract-buffer.md, distribute signals to Domain State and Domain Log files, deduplicate, then clear buffer. Must run in a NEW dedicated session."
+description: "Read extract-buffer.md, distribute signals to Domain State, surface thinking patterns and core candidates in report, then clear buffer. Must run in a NEW dedicated session."
 disable-model-invocation: true
 allowed-tools: "Read, Write, Edit, Glob"
 ---
@@ -19,7 +19,6 @@ Read `$AI_INFRA_DIR/extract-buffer.md`, distribute each signal to the appropriat
 
 Before executing, read the following reference files for format specifications:
 - `references/domain-state-structure.md` — Domain State table format and update rules
-- `references/domain-log-structure.md` — Domain Log entry format and examples
 
 ---
 
@@ -29,20 +28,18 @@ Before executing, read the following reference files for format specifications:
 |------|------|------|--------|
 | `extract-buffer.md` | Extract Buffer | Temporary buffer: read then clear | Read + Clear |
 | `{user}-{domain}.md` | Domain State | Current cognitive state for the domain | Read + Write |
-| `{user}-{domain}-log.md` | Domain Log | Append-only audit log for human review | Append only (never read) |
 | `{user}-core.md` | Core Profile | Personality-level traits, thinking patterns, core preferences | Read only (never write) |
 
 > **MVP scope:** Single domain only. The routing principle below applies regardless: route signals by content domain, not by the `source` field (source indicates where the signal was captured, not its domain).
 >
-> *Multi-domain support (additional Domain State/Domain Log file pairs) is a Phase 2 extension.*
+> *Multi-domain support (additional Domain State file pairs) is a Phase 2 extension.*
 
 ---
 
 ## Constraints
 
 - **Only read** Extract Buffer, Domain State, Core Profile
-- **Only append to** Domain Log — never read Domain Log. Domain Log is an append-only audit log for human review. Reading it would introduce unnecessary token cost and context noise with no benefit to signal processing.
-- **Never write to** Core Profile — /sync does not modify core.md. If a signal may warrant a Core Profile update, log a `[core-candidate]` entry to Domain Log for the user to review manually.
+- **Never write to** Core Profile — /sync does not modify core.md. If a signal may warrant a Core Profile update, surface it as a `[core-candidate]` in the sync report for the user to decide immediately.
 - **Do not re-scan** conversation history — all signals come from Extract Buffer
 - **Do not invent** signals not present in Extract Buffer
 - **Preserve** all existing content in Domain State — only append or update specific entries
@@ -65,42 +62,38 @@ Before processing, verify the state of Extract Buffer:
 
 Read the reference files listed above. Read Extract Buffer in full. Read Domain State in full. Read Core Profile in full (for deduplication and comparison only — never write to Core Profile).
 
-Do **not** read Domain Log.
-
 ### Step 2: Process Each Signal
 
-For every signal in Extract Buffer, determine its type and execute the corresponding routing rule. Carry forward the `topic` and `source` fields from each extract block in Extract Buffer for writing to Domain Log.
+For every signal in Extract Buffer, determine its type and execute the corresponding routing rule.
 
-#### [cognition] → Domain State + Domain Log
+#### [cognition] → Domain State
 
 1. **Check Domain State for an existing entry on the same knowledge point.**
    - Same knowledge point = same concept/tool/process, regardless of wording differences (e.g., "git rebase vs merge" and "difference between rebase and merge" are the same)
-   - If an existing entry has **the same cognitive status**, this signal is a duplicate → skip Domain State update, still log to Domain Log
-   - If an existing entry has **a lower cognitive status** (e.g., partial → mastered), move the ✓ in Domain State to the higher column per `domain-state-structure.md`, update the date → log the upgrade to Domain Log
-   - If an existing entry has **a higher cognitive status** (e.g., mastered → partial), this is a **cognitive regression** → move the ✓ in Domain State to the lower column, update the date → log the regression to Domain Log
-   - If **no existing entry**, add a new row to Domain State → log to Domain Log
+   - If an existing entry has **the same cognitive status**, this signal is a duplicate → skip Domain State update, record as duplicate in report
+   - If an existing entry has **a lower cognitive status** (e.g., partial → mastered), move the ✓ in Domain State to the higher column per `domain-state-structure.md`, update the date
+   - If an existing entry has **a higher cognitive status** (e.g., mastered → partial), this is a **cognitive regression** → move the ✓ in Domain State to the lower column, update the date
+   - If **no existing entry**, add a new row to Domain State
 
-2. **Append to Domain Log** using the cognition entry format in `domain-log-structure.md`.
+#### [thinking] → Sync report only
 
-#### [thinking] → Domain Log + maybe [core-candidate]
-
-1. **Always append to Domain Log** using the thinking entry format in `domain-log-structure.md`.
+1. **Include in the sync report** under "Thinking patterns observed" — do not write to any file.
 
 2. **Check Core Profile for relevance**:
-   - If this thinking pattern is **not represented in Core Profile** and appears to be a persistent trait → also append a `[core-candidate]` to Domain Log
-   - If this thinking pattern is **already captured in Core Profile** → no further action
-   - If this thinking pattern **contradicts** something in Core Profile → also append a `[core-candidate]` to Domain Log with a contradiction note
+   - If this thinking pattern is **not represented in Core Profile** and appears to be a persistent trait → surface as `[core-candidate]` in the sync report
+   - If this thinking pattern is **already captured in Core Profile** → note as "already tracked" in report
+   - If this thinking pattern **contradicts** something in Core Profile → surface as `[core-candidate]` in report with a contradiction note
 
 #### [preference] → Domain State and/or [core-candidate]
 
 1. **Determine scope**:
    - If the preference is **domain-specific** (e.g., "when explaining code, use terminology") → target Domain State's communication rules section
-   - If the preference is **cross-domain** (e.g., "don't use metaphors", "be direct") → do not write to Core Profile; instead append a `[core-candidate]` to Domain Log
+   - If the preference is **cross-domain** (e.g., "don't use metaphors", "be direct") → do not write to Core Profile; instead surface as `[core-candidate]` in the sync report
    - If ambiguous, default to Domain State (narrower scope is safer)
 
 2. **For Domain State-targeted preferences, check for existing similar preferences in Domain State**:
    - If a semantically equivalent preference already exists → skip (duplicate)
-   - If the new preference **contradicts** an existing one → replace the old one with the new one, log the change to Domain Log
+   - If the new preference **contradicts** an existing one → replace the old one with the new one
    - If no existing equivalent → add to Domain State
 
 ### Step 3: Clean Up Domain State
@@ -108,7 +101,7 @@ For every signal in Extract Buffer, determine its type and execute the correspon
 After all signals are processed:
 
 - If Domain State has grown noticeably, review for entries that can be compressed or consolidated
-- Items marked `mastered` for more than 30 days with no further status changes can be removed from Domain State (they're preserved in Domain Log)
+- Items marked `mastered` for more than 30 days with no further status changes can be removed from Domain State
 - Report to the user if any cleanup was performed
 
 ### Step 4: Clear Extract Buffer
@@ -121,11 +114,15 @@ After all signals have been distributed successfully, clear the content of Extra
 Sync complete ({date}):
 - Processed: {n} signals from {m} extract blocks
 - Domain State updated: {list of changes, or "no changes"}
-- Domain Log appended: {number of entries}
-- Core candidates logged: {number, or "none"}
+- Thinking patterns observed: {list of summaries, or "none"}
+- Core Profile candidates (your decision needed): {list, or "none"}
 - Duplicates skipped: {number}
 - Buffer cleared
 ```
+
+For each `[core-candidate]` surfaced, ask the user directly:
+> "This pattern/preference isn't in your Core Profile yet: [{description}]. Add it? (yes / no / edit)"  
+> If yes → instruct user to manually add to their `{user}-core.md`. Do not write it yourself.
 
 After reporting, remind the user:
 > This session is now complete. Do not run `/contour:extract` in this session — the sync conversation would produce echo signals.
@@ -147,6 +144,6 @@ When in doubt, **keep both entries** — false deduplication (losing a real sign
 ## Edge Cases
 
 - **Multiple extract blocks in Extract Buffer**: Process them chronologically. Later signals may override earlier ones for the same knowledge point.
-- **Signals from different workspaces**: Route by content domain, not by source workspace. A coding cognition signal captured in `Content_Creator` still goes to the coder domain files. The `source` field is recorded in Domain Log for traceability, not for routing.
+- **Signals from different workspaces**: Route by content domain, not by source workspace. A coding cognition signal captured in `Content_Creator` still goes to the coder domain files.
 - **Conflicting signals in the same sync**: If two signals in Extract Buffer contradict each other (e.g., one says "partial", another says "mastered" for the same knowledge point), use the **later** one (it reflects more recent state).
-- **Missing target files**: If a domain file (Domain State/Domain Log) doesn't exist yet, create it with the appropriate structure per the reference files before writing.
+- **Missing target files**: If Domain State doesn't exist yet, create it with the appropriate structure per the reference files before writing.

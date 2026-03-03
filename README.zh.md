@@ -20,29 +20,13 @@
 npx skills add Alexu0317-FATHER/contour
 ```
 
-### 注册为插件市场
-
-在 Claude Code 中运行以下命令：
-
-```bash
-/plugin marketplace add Alexu0317-FATHER/contour
-```
-
-### 安装技能
-
-**方式 1：通过浏览界面安装**
+### 在 Claude Code 中安装
 
 1. 在 Claude Code 中运行 `/plugin`
-2. 选择 `Browse and install plugins`
-3. 选择 `contour`
-4. 选择你想要安装的插件
-5. 选择 `Install now`
-
-**方式 2：直接安装**
-
-```bash
-/plugin install contour@Alexu0317-FATHER/contour
-```
+2. 切换到 `Marketplaces` 标签页
+3. 选择 `Add Marketplace`，输入 `Alexu0317-FATHER/contour`
+4. 自动切回 `Discover` 标签页，选择列出的 Contour 插件
+5. 选择用户级别 `Install for you (user scope)`，知界才能在你的所有对话中起作用
 
 ## 更新指南
 
@@ -61,13 +45,12 @@ npx skills add Alexu0317-FATHER/contour
 
 - **核心画像 (Core Profile)** (`{user}-core.md`) — 你的沟通偏好画像。全局加载，极少变动。
 - **领域状态 (Domain State)** (`{user}-{domain}.md`) — 你在特定领域的认知状态快照。持续更新。
-- **领域日志 (Domain Log)** (`{user}-{domain}-log.md`) — 仅追加的审计日志。供你回顾使用。
 - **提取缓冲区 (Extract Buffer)** (`extract-buffer.md`) — 跨会话的信号缓冲区。
 
-两种更新机制并行运行：
+两种更新机制服务于不同的时间维度：
 
-1. **实时监控** — 注入到 `CLAUDE.md` 中的指令会在你工作时检测认知变化，并静默更新领域状态。
-2. **提取与同步** — `/contour:extract` 扫描会话中的认知信号；`/contour:sync` 将它们分发到领域状态和领域日志中。
+1. **实时监控（当前会话）** — 每次 AI 回复结束后，Stop hook 自动触发，调用轻量级 Haiku 模型对你的消息做认知信号分类，直接写入 Domain State。全程自动，无需操作。若 hook 不可用，`CLAUDE.md` 提示层作为备用保障。
+2. **历史补录（过往会话）** — `/contour:extract` 扫描过往会话中遗漏的信号；`/contour:sync` 将信号分发到 Domain State。hook 安装前的历史 session 或未被覆盖的 session 可手动执行。
 
 ## 示例
 
@@ -91,9 +74,9 @@ Claude 在每次会话开始时加载此文件，并据此调整沟通方式—�
 
 | 命令 | 何时运行 | 作用 |
 |---------|-------------|--------------|
-| `/contour:setup` | 安装后运行一次 | 初始化你的核心画像、领域状态、领域日志和提取缓冲区文件，并将监控指令注入到 `CLAUDE.md` 中 |
+| `/contour:setup` | 安装后运行一次 | 初始化你的核心画像、领域状态和提取缓冲区文件，并将监控指令注入到 `CLAUDE.md` 中 |
 | `/contour:extract` | 在一个重要的会话结束时 | 扫描会话中的认知信号，写入缓冲区 |
-| `/contour:sync` | 在一个新的专用会话中 | 读取缓冲区，更新领域状态和领域日志，清空缓冲区 |
+| `/contour:sync` | 在一个新的专用会话中 | 读取缓冲区，更新领域状态，展示思维模式和 Core Profile 候选供你决策，清空缓冲区 |
 | `/contour:uninstall` | 当你想移除知界时 | 从 `CLAUDE.md` 中移除监控指令，可选择删除数据文件 |
 
 ### /contour:setup
@@ -129,7 +112,7 @@ Claude 在每次会话开始时加载此文件，并据此调整沟通方式—�
 ```
 
 **何时使用：**
-在一个新的、专用的会话中运行此命令（以避免上下文污染）。它会读取提取缓冲区，更新你的领域状态和领域日志，然后清空缓冲区。
+在一个新的、专用的会话中运行此命令（以避免上下文污染）。它会读取提取缓冲区，更新你的领域状态，展示思维模式观察和 Core Profile 候选供你当场决策，然后清空缓冲区。
 
 ### /contour:uninstall
 
@@ -140,6 +123,7 @@ Claude 在每次会话开始时加载此文件，并据此调整沟通方式—�
 ```
 
 **作用：**
+
 - 从你的 `CLAUDE.md` 中移除知界的监控指令。
 - 可选择提示你删除本地数据文件。
 
@@ -158,6 +142,7 @@ Claude 在每次会话开始时加载此文件，并据此调整沟通方式—�
    - 使用 Bash：`~/.bashrc`
 
 2. 在文件末尾添加下面这行（将路径替换为你想要的文件夹）：
+
    ```bash
    export AI_INFRA_DIR="/Users/你的用户名/OneDrive/contour"
    ```

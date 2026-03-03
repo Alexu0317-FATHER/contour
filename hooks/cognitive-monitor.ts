@@ -78,6 +78,11 @@ if (!userMessage) {
   process.exit(0);
 }
 
+// --- Skip slash commands entirely (hard filter, no LLM needed) ---
+if (userMessage.trim().startsWith("/")) {
+  process.exit(0);
+}
+
 // --- Read current Domain State ---
 let domainState: string;
 try {
@@ -135,7 +140,6 @@ Classify whether the USER's message contains a cognitive signal:
 1. "inquiry" — User asks a conceptual question: "What is X?", "How does X work?", "Explain X", "I don't understand X", "Introduce X"
 2. "mastery" — User demonstrates competence with a concept previously marked partial (applies it correctly, asks nuanced follow-ups)
 3. "regression" — User asks a basic question about something marked mastered
-4. "clarity" — User confirms understanding: "I see", "got it", "makes sense now"
 
 NOT a signal:
 - Operational questions (syntax, flags, "how do I run X?")
@@ -149,14 +153,14 @@ If no signal: {"signal":false}
 If signal: {"signal":true,"type":"inquiry","concept":"short concept name","status":"partial"}
 
 Rules for status field:
-- inquiry or clarity → "partial"
+- inquiry → "partial"
 - mastery → "mastered"
 - regression → "partial"`;
 
 // --- Call Haiku for classification ---
 interface Classification {
   signal: boolean;
-  type?: "inquiry" | "mastery" | "regression" | "clarity";
+  type?: "inquiry" | "mastery" | "regression";
   concept?: string;
   status?: "partial" | "mastered";
 }

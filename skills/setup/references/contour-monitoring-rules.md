@@ -35,10 +35,6 @@ This is not a self-check or afterthought. It is the **first step** of every turn
    - Meaning: Knowledge degradation or context reset (user forgot, or concept was fragile)
    - Action: Move X from `mastered` back to `partial`
 
-4. **Clarity Signal** — User explicitly confirms understanding (secondary path, for cases where no question was asked):
-   - Patterns: "I see", "got it", "makes sense now", "ah, I understand now"
-   - Action: If X is identifiable from context and not yet in Domain State, add with `partial` status
-
 **Update action**:
 1. Find concept X in Domain State table. If not present, add new row.
 2. Update status and date: `| {concept} | {status} | YYYY-MM |`

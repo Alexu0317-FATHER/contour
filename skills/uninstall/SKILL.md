@@ -69,7 +69,7 @@ Target file: `~/.claude/rules/contour-monitoring.md`
 Resolve the data directory: check `$AI_INFRA_DIR`, fall back to `~/.claude/contour/`.
 
 Ask (AskUserQuestion):
-> "Delete your Contour data files in {resolved_path}? This includes Core Profile, Domain State, Domain Log, and Extract Buffer. This cannot be undone."
+> "Delete your Contour data files in {resolved_path}? This includes Core Profile, Domain State, and Extract Buffer. This cannot be undone."
 
 Options: **Yes, delete data files** / **No, keep data files**
 
@@ -77,7 +77,7 @@ Options: **Yes, delete data files** / **No, keep data files**
 - List all files in the directory
 - Delete only files matching these patterns:
   - `*-core.md`
-  - `*-*.md` (Domain State and Domain Log files)
+  - `*-*.md` (Domain State files)
   - `extract-buffer.md`
   - `hooks/cognitive-monitor.ts` (and the `hooks/` subdirectory if empty)
 - If the directory is now empty, remove it

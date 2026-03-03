@@ -58,5 +58,5 @@ When loading this file at session start:
 - **Status upgrade** (e.g., partial → mastered): move the ✓ to the higher column, update the date
 - **Status regression** (e.g., mastered → partial): move the ✓ to the lower column, update the date
 - **New entry**: add a row with ✓ in the appropriate column and current date
-- **Cleanup**: items marked `mastered` for more than 30 days with no further status changes can be removed from Domain State (they're preserved in Domain Log)
+- **Cleanup**: items marked `mastered` for more than 30 days with no further status changes can be removed from Domain State
 - **Preferences**: domain-specific preferences go in the Communication Rules section as bullet points
