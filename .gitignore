@@ -17,3 +17,6 @@ node_modules/
 docs/references/
 docs/history/design/
 docs/history/article-*.md
+
+# 本地工作笔记，不进公开仓
+NOTES.local.md
