@@ -1,5 +1,28 @@
 # Changelog
 
+## [Unreleased] — 2026-08-07 · Pivot archival
+
+Documentation and archival only. **No change to plugin code, skills, or hooks** — `v0.3.0` remains the installable release and the version in both READMEs is unchanged.
+
+### Added
+- **`docs/history/PIVOT.md`** — full pivot record: what the cognitive-tracking version was, a dated timeline of the three times the premise changed over seven weeks, why it stopped, which conclusions remain valid, and links to the four published versions of the launch article.
+- **Tag `v0.3.0-cognitive` + matching GitHub Release** — complete pre-pivot snapshot. Still installable and runnable.
+- **`docs/history/README-cognitive.md` / `.zh.md` + `docs/history/assets/`** — archived copies of the old product description so it stays readable without checking out the tag.
+- **`LICENSE` (MIT)** — the READMEs had declared MIT since early versions but no license file existed, so GitHub reported none.
+- **`BACKLOG.md`** — committed into the snapshot; its contents (UX perceivability, Setup iteration, multi-domain hook routing, VS Code compatibility root cause) all belong to the cognitive-tracking era.
+
+### Changed
+- **Both READMEs now open with a pivot notice** pointing at the tag and `PIVOT.md`. The launch article links here, so readers arriving from it need to know the state of things.
+- **`.gitignore` boundaries redrawn** — the nine design documents, the article source, and the old Chinese reference docs remain local-only; `PIVOT.md`, the archived READMEs, and their images are public.
+- **Repository description set** on GitHub.
+
+### Rationale
+The project is moving from tracking *what the user knows* (a factual layer) to *how the user should be spoken to* (a behavioral layer). The old version worked — the Stop hook → SessionStart loop ran for over a month — but the premise was wrong: cognitive state is only one input into how to speak to someone, and an expensive, fast-decaying one.
+
+Nothing is deleted. The old version is preserved as a running snapshot and as a record of how the thinking changed, which is the more durable artifact.
+
+---
+
 ## [0.3.0] — 2026-03-03
 
 ### Changed
