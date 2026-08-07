@@ -13,6 +13,7 @@ Desktop.ini
 # Node (if needed later)
 node_modules/
 
-# Contour internal design docs (not for public repo)
-docs/design/
+# 内部材料，不进公开仓
 docs/references/
+docs/history/design/
+docs/history/article-*.md

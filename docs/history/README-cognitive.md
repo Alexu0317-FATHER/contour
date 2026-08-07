@@ -2,12 +2,6 @@
 
 English | [中文](README.zh.md)
 
-> **This project is pivoting.** Everything described below is the cognitive-state-tracking version (`v0.3.0`), which worked but proved to be solving the wrong problem — it tracked *what you know* (a factual layer) when what actually shapes a conversation is *how you should be spoken to* (a behavioral layer).
->
-> The v0.3.0 snapshot is preserved at tag [`v0.3.0-cognitive`](../../releases/tag/v0.3.0-cognitive) and remains installable. The new direction is not yet specified.
->
-> Full account: [docs/history/PIVOT.md](docs/history/PIVOT.md)
-
 Fine-grained cognitive state tracking for Claude Code.
 
 Most AI tools treat you as either an expert or a beginner. Contour tracks exactly what you know, what you partially understand, and what you don't — per knowledge point, per domain — and keeps that state synchronized across sessions.
