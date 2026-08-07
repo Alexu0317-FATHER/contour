@@ -117,12 +117,21 @@ Contour 把闭环做真了，却撞上了更细的一层：**写了也读了，�
 | `docs/history/assets/` | 老 README 的配图 | ✅ |
 | `BACKLOG.md`（仓根） | pivot 前最后一轮未竟清单 | ✅ |
 | `docs/history/design/` | 九份设计文档 + Retrospective，思维演进的原始记录 | 仅本地 |
-| `docs/history/article-*.md` | 对外文章《我一个不会代码的人，被逼得自己写了个AI插件》原稿 | 仅本地 |
+| `docs/history/article-*.md` | 对外文章原稿（已发表版本见下） | 仅本地 |
 | `docs/references/` | 老版本的中文参考文档与安装截图 | 仅本地 |
 
 标「仅本地」的材料保存在开发机上，未进公开仓。本文第二节的时间线与第四节的结论，均已从这些材料中摘出，可独立阅读。
 
-> **待补**：文章已发布版本的链接。
+### 对外文章
+
+《我一个不会代码的人，被逼得自己写了个AI插件》—— 认知追踪版的对外叙事，文中链向本仓。
+
+| 平台 | 发布日期 | 链接 |
+|---|---|---|
+| 公众号 | 2026-03-01 | https://mp.weixin.qq.com/s/5gI6WLXMAUdlY52aSSBDcA |
+| 知乎 | 2026-03-05 | https://zhuanlan.zhihu.com/p/2012835631106105359 |
+| 搜狐号 | 2026-03-05 | https://www.sohu.com/a/992701866_100229230 |
+| 百家号 | 2026-03-05 | https://baijiahao.baidu.com/builder/preview/s?id=1858788260585363542 |
 
 ---
 
