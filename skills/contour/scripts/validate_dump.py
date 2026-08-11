@@ -4,6 +4,8 @@
 用法：
     python validate_dump.py <倾倒包路径> [更多路径...]
     python validate_dump.py --inbox <实例仓路径>     # 校验整个 inbox
+    python validate_dump.py --cold-start-ready <实例仓路径>
+        # 校验 inbox，并要求至少两个不同端各有一份合法 baseline
 
 规范见 references/protocol.md。这里做的全是确定性检查——
 字段在不在、值合不合法、章节缺不缺。语义判断不归它管。
@@ -166,9 +168,13 @@ def main(argv):
         print(__doc__)
         return 2
 
-    if args[0] == "--inbox":
+    cold_start_ready = args[0] == "--cold-start-ready"
+    if args[0] in {"--inbox", "--cold-start-ready"}:
         if len(args) != 2:
-            print("用法：validate_dump.py --inbox <实例仓路径>", file=sys.stderr)
+            print(
+                "用法：validate_dump.py --inbox|--cold-start-ready <实例仓路径>",
+                file=sys.stderr,
+            )
             return 2
         inbox = Path(args[1]) / "dumps" / "inbox"
         if not inbox.is_dir():
@@ -177,6 +183,9 @@ def main(argv):
         targets = sorted(inbox.rglob("*.md"))
         if not targets:
             print(f"{inbox} 下没有倾倒包")
+            if cold_start_ready:
+                print("[BLOCK] 第一版发布至少需要两个不同端的合法 baseline")
+                return 1
             return 0
     else:
         targets = [Path(a) for a in args]
@@ -184,6 +193,7 @@ def main(argv):
     failed = 0
     seen = {}          # dump_id -> 第一个用它的文件
     collisions = 0
+    baseline_endpoints = set()
     for path in targets:
         problems, dump_id = check(path)
         # dump_id 是包的唯一身份，消费 manifest 靠它记账。撞号会造成重复消费或漏包，
@@ -202,10 +212,25 @@ def main(argv):
                 print(f"       {p}")
         else:
             print(f"[ OK ] {path}")
+            if cold_start_ready:
+                fields, _ = parse_frontmatter(path.read_text(encoding="utf-8"))
+                if fields and fields.get("dump_type") == "baseline":
+                    baseline_endpoints.add(fields.get("endpoint_id", ""))
 
     print(f"\n{len(targets)} 个包，{failed} 个不合规")
     if collisions:
         print(f"其中 {collisions} 个 dump_id 撞号——消费 manifest 会记错账")
+    if cold_start_ready:
+        baseline_endpoints.discard("")
+        endpoints = ", ".join(sorted(baseline_endpoints)) or "无"
+        print(f"合法 baseline 来自 {len(baseline_endpoints)} 个不同端：{endpoints}")
+        if len(baseline_endpoints) < 2:
+            print("[BLOCK] 第一版发布至少需要两个不同端的合法 baseline")
+            return 1
+        if failed:
+            print("[BLOCK] inbox 仍有不合规包，修复后才能发布第一版")
+            return 1
+        print("[READY] 已通过第一版发布的两端 baseline 门槛；仍需对照 config.md 确认端已登记")
     return 1 if failed else 0
 
 
