@@ -26,7 +26,8 @@
 
 | 路径 | 是什么 |
 |---|---|
-| [`docs/新知界需求.md`](docs/新知界需求.md) | 需求文档，唯一活的规格 |
+| [`docs/新知界需求.md`](docs/新知界需求.md) | 当前版本的唯一需求规格；只有准备进入当前实现的能力才写进这里 |
+| [`docs/roadmap/`](docs/roadmap/) | 已确认但暂不进入当前版本的后续能力；每个主题单独成文，成熟后再进入需求或技能 |
 | [`skills/contour/`](skills/contour/) | 技能本体。规则只活在这里，因为分发到各端的是技能，不是 `docs/` |
 | [`docs/history/`](docs/history/) | 归档的设计草案、交叉评审，以及上一版产品的文档 |
 | [`CHANGELOG.md`](CHANGELOG.md) | 每次迭代改了什么 |

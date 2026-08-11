@@ -26,7 +26,8 @@ This repository is **mid-rebuild**. There is no release you can install today.
 
 | Path | What it is |
 |---|---|
-| [`docs/新知界需求.md`](docs/新知界需求.md) | The requirements document — the single live spec |
+| [`docs/新知界需求.md`](docs/新知界需求.md) | The single requirements spec for the current version; only capabilities intended for the current implementation belong here |
+| [`docs/roadmap/`](docs/roadmap/) | Confirmed future capabilities that are not part of the current version; each topic gets its own document until it is ready to enter the requirements or skill |
 | [`skills/contour/`](skills/contour/) | The skill itself. Rules live here and nowhere else, because the skill is what gets distributed to each endpoint |
 | [`docs/history/`](docs/history/) | Archived design drafts, cross-reviews, and the previous product's documentation |
 | [`CHANGELOG.md`](CHANGELOG.md) | What changed each iteration |

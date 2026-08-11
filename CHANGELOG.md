@@ -8,7 +8,8 @@ CC 与 Codex 两条并行线的交叉评审结束，结论合并为单一实现�
 
 | 原位置 | 新位置 | 说明 |
 |---|---|---|
-| `新知界需求.md`（仓库根） | `docs/新知界需求.md` | **唯一活的需求文档**，新需求写这里 |
+| `新知界需求.md`（仓库根） | `docs/新知界需求.md` | **当前版本的唯一需求规格**；只有准备进入当前实现的能力才写这里 |
+| — | `docs/roadmap/` | 已确认但暂不进入当前版本的后续能力；按主题单独成文，成熟后再进入需求或技能 |
 | `NOTES.local.md`（仓库根） | `docs/NOTES.local.md` | 决策记录，仍被 gitignore |
 | `docs/倾倒与同步协议-v0.md` | `docs/history/` | 已吸收进技能，头部标注了每节去向，**不再修改** |
 | `docs/原生记忆可见性测试.md` | `docs/history/` | 同上 |
@@ -24,6 +25,7 @@ CC 与 Codex 两条并行线的交叉评审结束，结论合并为单一实现�
 - **`assets/prompts/self-report-incremental.md`** —— 日常增量用，基线 prompt 只在端首次纳入时跑
 - **`scripts/validate_dump.py`、`scripts/new_dump.py`** —— 包 schema 校验与唯一 ID 生成。确定性的活交给脚本，不让模型每次现编
 - **`evals/evals.md`** —— 技能自身的评测规格（开发期工具，不是运行时）
+- **`docs/roadmap/锚点适配路线图.md`** —— 固定后端共同契约与按需加载方式；记录 GitHub 当前基线、Google Drive 版本模型及准入验证，不改变 MVP 只支持 GitHub 的范围
 
 ### 冻结的范围
 
