@@ -35,7 +35,7 @@ Your own profile, dumps and evidence do **not** live here. They belong in a sepa
 
 ## Design commitments
 
-- **One write authority, catch up before reading, conditional writes.** Copies are fine; two write authorities are not.
+- **One authoritative anchor; any capable endpoint may take a turn coordinating; a single publish is serialised.** Copies are fine; two authoritative anchors are not. Catch up before reading, and write conditionally.
 - **Contour does not hold your memory, it refreshes it.** Native memory systems keep doing their job; Contour supplies better material and a portable attention policy.
 - **Convergence is measured, not asserted.** Without behavioural testing there is no reason to believe endpoints are drifting together rather than apart.
 - **Nothing happens without your say-so.** The skill being triggered is not permission to read your repository, let alone write to it.
