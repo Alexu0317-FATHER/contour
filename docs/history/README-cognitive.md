@@ -1,6 +1,6 @@
 # Contour (知界)
 
-English | [中文](README.zh.md)
+English | [中文](README-cognitive.zh.md)
 
 Fine-grained cognitive state tracking for Claude Code.
 

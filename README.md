@@ -2,207 +2,44 @@
 
 English | [中文](README.zh.md)
 
-> **This project is pivoting.** Everything described below is the cognitive-state-tracking version (`v0.3.0`), which worked but proved to be solving the wrong problem — it tracked *what you know* (a factual layer) when what actually shapes a conversation is *how you should be spoken to* (a behavioral layer).
->
-> The v0.3.0 snapshot is preserved at tag [`v0.3.0-cognitive`](../../releases/tag/v0.3.0-cognitive) and remains installable. The new direction is not yet specified.
->
-> Full account: [docs/history/PIVOT.md](docs/history/PIVOT.md)
+**Cross-endpoint memory coordination for people who use several AI assistants at once.**
 
-Fine-grained cognitive state tracking for Claude Code.
+If you use Claude Code, Codex, Claude.ai, Claude Desktop and ChatGPT, each one holds a different, partial memory of you. Switching endpoints means explaining yourself again — your memory has become a platform switching cost. And none of them carries a portable definition of *how you want to be talked to*.
 
-Most AI tools treat you as either an expert or a beginner. Contour tracks exactly what you know, what you partially understand, and what you don't — per knowledge point, per domain — and keeps that state synchronized across sessions.
+Contour addresses that. It does **not** replace any platform's native memory. It keeps one source of truth you own, feeds each endpoint's native memory from it, and puts a portable routing table into every endpoint's always-on context so behaviour converges over time.
 
-## Prerequisites
+---
 
-- Node.js environment installed
-- Ability to run `npx` commands
-- [Claude Code](https://claude.ai/code) installed and configured
+## Status: in development, not installable yet
 
-## Installation
+This repository is **mid-rebuild**. There is no release you can install today.
 
-### Quick Install (Recommended)
+| | |
+|---|---|
+| **What's here** | A skill draft under [`skills/contour/`](skills/contour/) — protocol, references, templates and validation scripts |
+| **What's not** | A working end-to-end implementation. The GitHub instance repository, channel verification and endpoint probes have not been run yet |
+| **Previous version** | Tag `v0.3.0-cognitive` and its [GitHub Release](https://github.com/Alexu0317-FATHER/contour/releases) — a different product (cognitive-state tracking) that ran for over a month. See [`docs/history/PIVOT.md`](docs/history/PIVOT.md) for what changed and why |
 
-```bash
-npx skills add Alexu0317-FATHER/contour
-```
+**Everything the old README described — `/contour:sync`, `/contour:extract`, the Stop hook, Domain State — belongs to that archived version and no longer exists in the working tree.**
 
-### Install in Claude Code
+## Where things live
 
-1. Run `/plugin` in Claude Code
-2. Switch to the `Marketplaces` tab
-3. Select `Add Marketplace`, enter `Alexu0317-FATHER/contour`
-4. It will switch back to the `Discover` tab, listing the plugins in contour
-5. Select `Install for you (user scope)` so Contour works across all your sessions
+| Path | What it is |
+|---|---|
+| [`docs/新知界需求.md`](docs/新知界需求.md) | The requirements document — the single live spec |
+| [`skills/contour/`](skills/contour/) | The skill itself. Rules live here and nowhere else, because the skill is what gets distributed to each endpoint |
+| [`docs/history/`](docs/history/) | Archived design drafts, cross-reviews, and the previous product's documentation |
+| [`CHANGELOG.md`](CHANGELOG.md) | What changed each iteration |
 
-## Update Skills
+Your own profile, dumps and evidence do **not** live here. They belong in a separate private repository — this one is public code with a public release history, and personal material has no business in it.
 
-To update Contour to the latest version:
+## Design commitments
 
-1. Run `/plugin` in Claude Code
-2. Switch to `Marketplaces` tab (use arrow keys or Tab)
-3. Select `contour`
-4. Choose `Update marketplace`
-
-You can also Enable auto-update to get the latest versions automatically.
-
-## How it works
-
-Contour uses four local files per domain:
-
-- **Core Profile** (`{user}-core.md`) — Your communication profile. Loaded globally, rarely changes.
-- **Domain State** (`{user}-{domain}.md`) — Your cognitive state snapshot for a domain. Updated continuously.
-- **Extract Buffer** (`extract-buffer.md`) — Cross-session signal buffer.
-
-Two update mechanisms work at different time scales:
-
-1. **Live monitoring (current session)** — A Stop hook fires after every assistant response, calls a lightweight Haiku model to classify your message for cognitive signals, and writes directly to Domain State. Fully automatic — no user action needed. A `CLAUDE.md` prompt layer provides backup coverage if hooks are unavailable.
-2. **Historical backfill (past sessions)** — `/contour:extract` scans a past session for signals the hook didn't cover; `/contour:sync` distributes them to Domain State. Run manually when needed.
-
-## Example
-
-### What your Domain State looks like
-
-After a few sessions, Contour builds a picture of your cognitive state per domain:
-
-```
-# Alex — coder Domain State
-
-Last synced: 2026-02-22
-
-## Cognitive State
-
-| Knowledge Point                          | Partial | Mastered | Updated |
-|------------------------------------------|---------|----------|---------|
-| Claude Code session file structure       |         | ✓        | 2026-02 |
-| MCP server config on Windows             | ✓       |          | 2026-02 |
-| Claude Code plugin install format        |         | ✓        | 2026-02 |
-
-## Communication Rules
-
-- When explaining Claude Code internals, verify against docs — don't rely on memory
-```
-
-Claude loads this file at session start and adjusts how it communicates — no over-explaining mastered concepts, no skipping necessary context for partial ones.
-
-### After a work session — /contour:extract
-
-![extract output](assets/extract.png)
-
-### Syncing to permanent state — /contour:sync
-
-![sync output](assets/sync.png)
-
-## Available Commands
-
-| Command | When to run | What it does |
-|---------|-------------|--------------|
-| `/contour:setup` | Once, after install | Initializes your Core Profile, Domain State, and Extract Buffer files and injects monitoring into `CLAUDE.md` |
-| `/contour:extract` | End of a significant session | Scans the session for cognitive signals, writes to buffer |
-| `/contour:sync` | In a new dedicated session | Reads buffer, updates Domain State, surfaces thinking patterns and core candidates, clears buffer |
-| `/contour:uninstall` | When you want to remove Contour | Removes monitoring injection from `CLAUDE.md`, optionally deletes data files |
-
-### /contour:setup
-
-Initializes the Contour environment for your workspace.
-
-```bash
-/contour:setup
-```
-
-**What it does:**
-- Creates the necessary data files (`Core Profile`, `Domain State`, etc.) in your local directory.
-- Injects the live monitoring instructions into your workspace's `CLAUDE.md` file.
-- **Note:** Restart Claude Code after setup completes to activate the live monitoring instruction.
-
-### /contour:extract
-
-Extracts cognitive signals from your current session.
-
-```bash
-/contour:extract
-```
-
-**When to use:**
-Run this at the end of a significant working session where you've learned new concepts or demonstrated mastery of existing ones. It scans the conversation history and writes detected signals to the `Extract Buffer`.
-
-### /contour:sync
-
-Synchronizes extracted signals into your permanent cognitive state.
-
-```bash
-/contour:sync
-```
-
-**When to use:**
-Run this in a new, dedicated session (to avoid context pollution). It reads the `Extract Buffer`, updates your `Domain State`, surfaces any thinking patterns and Core Profile candidates for your review, and then clears the buffer.
-
-### /contour:uninstall
-
-Removes Contour from your workspace.
-
-```bash
-/contour:uninstall
-```
-
-**What it does:**
-- Removes the Contour monitoring instructions from your `CLAUDE.md`.
-- Optionally prompts you to delete the local data files.
-
-## Environment Configuration & Data Files
-
-Contour stores your data at `~/.claude/contour/` by default. All files are plain Markdown — readable, editable, and yours.
-
-### Changing the storage location (optional)
-
-You might want to move the storage folder if you'd like to sync it with a cloud drive (e.g., OneDrive, Dropbox, iCloud) or keep it somewhere more accessible.
-
-#### macOS / Linux
-
-1. Open your shell config file in any text editor:
-   - If you use Zsh (default on macOS): `~/.zshrc`
-   - If you use Bash: `~/.bashrc`
-
-2. Add this line at the end of the file (replace the path with your chosen folder):
-   ```bash
-   export AI_INFRA_DIR="/Users/yourname/Library/CloudStorage/OneDrive/contour"
-   ```
-
-3. Save the file, then restart your terminal (or run `source ~/.zshrc`).
-
-4. Run `/contour:setup` — Contour will create the data files in your new folder.
-
-#### Windows
-
-1. Press `Win + R`, type `sysdm.cpl`, and press Enter.
-2. Click **Advanced** → **Environment Variables**.
-3. Under **User variables**, click **New**.
-4. Set:
-   - Variable name: `AI_INFRA_DIR`
-   - Variable value: `C:\Users\YourName\OneDrive\contour` (use your actual path)
-5. Click OK to save.
-6. **Restart Claude Code** for the change to take effect.
-7. Run `/contour:setup` — Contour will create the data files in your new folder.
-
-> **Note:** If you already ran `/contour:setup` before changing the path, your existing data files won't move automatically. You'll need to manually copy the files from `~/.claude/contour/` to your new folder, or run `/contour:setup` again to create fresh files in the new location.
-
-## Customization
-
-Because Contour stores your cognitive state in plain Markdown files, you can manually edit them at any time. 
-
-- Want to force Claude to treat you as an expert in a specific domain? Open your `{user}-{domain}.md` file and manually update the status of concepts to `mastered`.
-- Want to adjust your communication preferences? Edit your `{user}-core.md` file.
-
-Contour will respect your manual edits during the next session.
-
-## Disclaimer
-
-- **File Modification:** The `/contour:setup` command will modify the `CLAUDE.md` file in your current workspace to inject monitoring instructions.
-- **Data Privacy:** All cognitive state tracking happens locally on your machine. No data is sent to external servers by Contour itself (though Claude Code sends prompts to Anthropic's API as usual).
-
-## Version
-
-`v0.3.0` — Pre-release. In active testing.
+- **One write authority, catch up before reading, conditional writes.** Copies are fine; two write authorities are not.
+- **Contour does not hold your memory, it refreshes it.** Native memory systems keep doing their job; Contour supplies better material and a portable attention policy.
+- **Convergence is measured, not asserted.** Without behavioural testing there is no reason to believe endpoints are drifting together rather than apart.
+- **Nothing happens without your say-so.** The skill being triggered is not permission to read your repository, let alone write to it.
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE).

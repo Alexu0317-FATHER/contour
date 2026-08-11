@@ -15,10 +15,15 @@
 """
 
 import argparse
+import re
 import sys
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
+
+# endpoint-id 会被直接拼进路径，必须限定字符集——否则 "../escaped" 能把包
+# 写到 dumps/inbox 之外，而校验器只扫 inbox，看不见它。
+ENDPOINT_ID = re.compile(r"\A[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 
 SKELETON = """---
 schema_version: contour-dump-v1
@@ -102,17 +107,28 @@ def main():
                    choices=["true", "false", "unknown"])
     args = p.parse_args()
 
-    if args.endpoint_id != args.endpoint_id.lower():
-        p.error("endpoint_id 要全小写")
+    if not ENDPOINT_ID.match(args.endpoint_id):
+        p.error(
+            f"endpoint_id 不合规：{args.endpoint_id!r}。"
+            "只允许小写字母、数字和单个连字符分隔（chatgpt-web / codex-cli）"
+        )
     if args.dump_type == "incremental" and args.previous_dump_id == "null":
         p.error("incremental 包必须给 --previous-dump-id")
 
     now = datetime.now(timezone.utc).astimezone()
     stamp = now.strftime("%Y%m%dT%H%M%S%z")
+    dump_id = str(uuid.uuid4())
 
-    target_dir = Path(args.instance_repo) / "dumps" / "inbox" / args.endpoint_id
+    inbox = (Path(args.instance_repo) / "dumps" / "inbox").resolve()
+    target_dir = (inbox / args.endpoint_id).resolve()
+    # 双保险：字符集挡住已知形态，解析后的路径检查挡住符号链接一类的意外。
+    if target_dir != inbox / args.endpoint_id or inbox not in target_dir.parents:
+        print(f"拒绝写到收件区之外：{target_dir}", file=sys.stderr)
+        return 1
+
     target_dir.mkdir(parents=True, exist_ok=True)
-    target = target_dir / f"{stamp}__{args.dump_type}.md"
+    # 文件名带 dump_id：它是包的唯一身份，时间戳只是让目录可读。
+    target = target_dir / f"{stamp}__{args.dump_type}__{dump_id}.md"
 
     if target.exists():
         # 包不可变：绝不覆盖已存在的文件。
@@ -120,7 +136,7 @@ def main():
         return 1
 
     target.write_text(SKELETON.format(
-        dump_id=str(uuid.uuid4()),
+        dump_id=dump_id,
         endpoint_id=args.endpoint_id,
         provider=args.provider,
         surface=args.surface,

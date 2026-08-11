@@ -1,6 +1,6 @@
 # 知界 (Contour)
 
-[English](README.md) | 中文
+[English](README-cognitive.md) | 中文
 
 为 Claude Code 提供细粒度的认知状态追踪。
 

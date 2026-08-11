@@ -52,6 +52,13 @@ MODEL_NAME = re.compile(
     r"|(?<![a-z])(?:opus|sonnet|haiku)(?![a-z])"  # 这几个单独出现就是模型名
 )
 
+# endpoint-id 会被拼进路径，字符集必须封死。
+ENDPOINT_ID = re.compile(r"\A[a-z0-9]+(?:-[a-z0-9]+)*\Z")
+UUID4 = re.compile(
+    r"\A[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\Z",
+    re.I,
+)
+
 
 def parse_frontmatter(text):
     m = FRONTMATTER.match(text)
@@ -70,16 +77,19 @@ def parse_frontmatter(text):
 
 
 def check(path):
-    """返回该文件的问题列表，空列表表示通过。"""
+    """返回 (问题列表, dump_id)。问题列表为空表示单文件层面通过。
+
+    dump_id 单独返回，是因为撞号只能在批次层面发现——单看一个文件永远合规。
+    """
     problems = []
     try:
         text = path.read_text(encoding="utf-8")
     except OSError as exc:
-        return [f"读不出来：{exc}"]
+        return [f"读不出来：{exc}"], None
 
     fields, body = parse_frontmatter(text)
     if fields is None:
-        return ["缺 frontmatter（文件必须以 --- 开头）"]
+        return ["缺 frontmatter（文件必须以 --- 开头）"], None
 
     for name in REQUIRED_FIELDS:
         if name not in fields:
@@ -100,8 +110,8 @@ def check(path):
             problems.append(f"captured_at 不是 ISO 8601：{captured!r}")
 
     dump_id = fields.get("dump_id", "")
-    if not dump_id or dump_id in {"null", "<全局唯一>"}:
-        problems.append("dump_id 必须是真实的全局唯一值")
+    if not UUID4.match(dump_id):
+        problems.append(f"dump_id 必须是 UUID4：{dump_id!r}")
 
     if fields.get("dump_type") == "incremental":
         prev = fields.get("previous_dump_id", "")
@@ -109,8 +119,11 @@ def check(path):
             problems.append("incremental 包必须给 previous_dump_id")
 
     endpoint_id = fields.get("endpoint_id", "")
-    if endpoint_id and endpoint_id != endpoint_id.lower():
-        problems.append(f"endpoint_id 要全小写：{endpoint_id!r}")
+    if endpoint_id and not ENDPOINT_ID.match(endpoint_id):
+        problems.append(
+            f"endpoint_id 不合规：{endpoint_id!r}。只允许小写字母、数字和单个连字符分隔"
+            "——它会被拼进路径"
+        )
     # 端标识描述产品表面，不含模型名——换模型不是换端。
     # 匹配「模型族 + 版本号」，不匹配裸的族名：chatgpt-web 里的 "gpt" 是产品名不是模型名。
     hit = MODEL_NAME.search(endpoint_id)
@@ -127,14 +140,17 @@ def check(path):
     if "## 可访问的持久记忆" in body and "## 非原生记忆来源" not in body:
         problems.append("持久记忆与非原生来源必须分开，否则冲突消解无法工作")
 
+    # 位置检查没有例外：inbox 根部的裸文件也是放错了——它不属于任何端的收件区，
+    # 谁该为它负责、该不该参与合并都无从判断。
     parent = path.parent.name
-    if endpoint_id and parent != endpoint_id and parent != "inbox":
+    if endpoint_id and parent != endpoint_id:
+        where = "inbox 根部" if parent == "inbox" else f"{parent!r} 下"
         problems.append(
-            f"包放错目录：endpoint_id 是 {endpoint_id!r}，却在 {parent!r} 下。"
-            "每个端只写自己的收件区"
+            f"包放错位置：endpoint_id 是 {endpoint_id!r}，却在{where}。"
+            "每个包必须在 dumps/inbox/<endpoint-id>/ 里"
         )
 
-    return problems
+    return problems, dump_id
 
 
 def main(argv):
@@ -166,8 +182,18 @@ def main(argv):
         targets = [Path(a) for a in args]
 
     failed = 0
+    seen = {}          # dump_id -> 第一个用它的文件
+    collisions = 0
     for path in targets:
-        problems = check(path)
+        problems, dump_id = check(path)
+        # dump_id 是包的唯一身份，消费 manifest 靠它记账。撞号会造成重复消费或漏包，
+        # 而单看一个文件永远发现不了——必须在批次层面查。
+        if dump_id:
+            if dump_id in seen:
+                collisions += 1
+                problems = problems + [f"dump_id 与 {seen[dump_id].name} 重复"]
+            else:
+                seen[dump_id] = path
         # 标记用纯 ASCII：Windows 控制台默认 GBK，打不出勾叉符号会直接崩。
         if problems:
             failed += 1
@@ -178,6 +204,8 @@ def main(argv):
             print(f"[ OK ] {path}")
 
     print(f"\n{len(targets)} 个包，{failed} 个不合规")
+    if collisions:
+        print(f"其中 {collisions} 个 dump_id 撞号——消费 manifest 会记错账")
     return 1 if failed else 0
 
 

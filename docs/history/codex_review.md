@@ -7,7 +7,7 @@
 > 评审对象：
 >
 > - Codex：[`新知界需求.md`](../新知界需求.md)、[`倾倒与同步协议-v0.md`](倾倒与同步协议-v0.md)、[`原生记忆可见性测试.md`](原生记忆可见性测试.md)
-> - CC：[`skills/contour/`](../../skills/contour/)、[`NOTES.local.md`](../NOTES.local.md)
+> - CC：[`skills/contour/`](../../skills/contour/)、`docs/NOTES.local.md`（本地限定，未进仓库）
 >
 > 本评审基于 2026-08-10 当前工作区快照。CC 草稿在评审期间未发生变化；本文件只做评审，不修改双方原文。
 

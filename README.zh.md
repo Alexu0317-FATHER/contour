@@ -1,194 +1,45 @@
-# 知界 (Contour)
+# 知界 Contour
 
 [English](README.md) | 中文
 
-> **本项目正在转向。** 下面描述的是认知状态追踪版（`v0.3.0`）。它跑通了，但命题错了——它追踪的是「你懂什么」（事实层），而真正决定对话体验的是「对你该怎么说」（行为层）。
->
-> v0.3.0 的完整快照保存在 tag [`v0.3.0-cognitive`](../../releases/tag/v0.3.0-cognitive)，仍然可安装可运行。新方向的 spec 尚未定稿。
->
-> 完整记录见 [docs/history/PIVOT.md](docs/history/PIVOT.md)
+**给同时用好几个 AI 助手的人做的跨端记忆协调层。**
 
-为 Claude Code 提供细粒度的认知状态追踪。
+你在用 Claude Code、Codex、Claude.ai、Claude Desktop 和 ChatGPT——每一端都对你有一份记忆，每一份都残缺、都不一样。换端等于重新教一遍，记忆成了平台转移成本。而且没有任何一端对「该怎么跟你说话」有可携带的定义。
 
-大多数 AI 工具要么把你当成专家，要么把你当成新手。知界 (Contour) 能够精确追踪你对每个知识点、每个领域的掌握程度——什么是你已经精通的，什么是你一知半解的，什么是你完全不懂的——并在不同的会话之间保持这些状态的同步。
+知界解决这个。它**不取代**任何平台的原生记忆：它维护一份你自己掌握的信源，从信源去喂各端的原生记忆，并把一张可携带的路由表放进每一端的常驻上下文，让各端行为逐渐收敛。
 
-## 前置要求
+---
 
-- 已安装 Node.js 环境
-- 能够运行 `npx` 命令
-- 已安装并配置好 [Claude Code](https://claude.ai/code)
+## 状态：开发中，还装不了
 
-## 安装指南
+这个仓库正在**重建当中**，目前没有可安装的版本。
 
-### 快速安装 (推荐)
+| | |
+|---|---|
+| **有什么** | [`skills/contour/`](skills/contour/) 下的技能草稿——协议、参考文档、模板和校验脚本 |
+| **没有什么** | 跑得通的完整实现。GitHub 实例仓、通道验证、端能力探测都还没实际跑过 |
+| **上一版** | 标签 `v0.3.0-cognitive` 及其 [GitHub Release](https://github.com/Alexu0317-FATHER/contour/releases)——那是另一个产品（认知状态追踪），跑了一个多月。改动原因见 [`docs/history/PIVOT.md`](docs/history/PIVOT.md) |
 
-```bash
-npx skills add Alexu0317-FATHER/contour
-```
+**旧 README 里写的那些——`/contour:sync`、`/contour:extract`、Stop hook、Domain State——全部属于已归档的那一版，工作区里已经不存在了。**
 
-### 在 Claude Code 中安装
+## 东西都在哪
 
-1. 在 Claude Code 中运行 `/plugin`
-2. 切换到 `Marketplaces` 标签页
-3. 选择 `Add Marketplace`，输入 `Alexu0317-FATHER/contour`
-4. 自动切回 `Discover` 标签页，选择列出的 Contour 插件
-5. 选择用户级别 `Install for you (user scope)`，知界才能在你的所有对话中起作用
+| 路径 | 是什么 |
+|---|---|
+| [`docs/新知界需求.md`](docs/新知界需求.md) | 需求文档，唯一活的规格 |
+| [`skills/contour/`](skills/contour/) | 技能本体。规则只活在这里，因为分发到各端的是技能，不是 `docs/` |
+| [`docs/history/`](docs/history/) | 归档的设计草案、交叉评审，以及上一版产品的文档 |
+| [`CHANGELOG.md`](CHANGELOG.md) | 每次迭代改了什么 |
 
-## 更新指南
+你自己的画像、倾倒物和证据**不放在这里**，它们属于另一个私有仓库——这个仓是公开代码、还有公开的发布记录，个人材料不该进来。
 
-要将知界更新到最新版本：
+## 几条设计承诺
 
-1. 在 Claude Code 中运行 `/plugin`
-2. 切换到 `Marketplaces` 标签页 (使用方向键或 Tab 键)
-3. 选择 `contour`
-4. 选择 `Update marketplace`
+- **一个写入权威，读前追平，写入必须条件化。** 副本可以有，两个写入权威不行。
+- **知界不持有你的记忆，它刷新你的记忆。** 原生记忆系统继续干它的活，知界提供更好的材料和一份可携带的关注策略。
+- **收敛要测出来，不是宣布出来。** 不做行为体检，你没有任何理由相信各端在往一起走而不是在往两边散。
+- **没有你点头，什么都不会发生。** 技能被触发不等于它可以读你的仓库，更不等于可以写。
 
-你也可以启用自动更新 (Enable auto-update) 来自动获取最新版本。
+## 许可
 
-## 工作原理
-
-知界为每个领域使用四个本地文件：
-
-- **核心画像 (Core Profile)** (`{user}-core.md`) — 你的沟通偏好画像。全局加载，极少变动。
-- **领域状态 (Domain State)** (`{user}-{domain}.md`) — 你在特定领域的认知状态快照。持续更新。
-- **提取缓冲区 (Extract Buffer)** (`extract-buffer.md`) — 跨会话的信号缓冲区。
-
-两种更新机制服务于不同的时间维度：
-
-1. **实时监控（当前会话）** — 每次 AI 回复结束后，Stop hook 自动触发，调用轻量级 Haiku 模型对你的消息做认知信号分类，直接写入 Domain State。全程自动，无需操作。若 hook 不可用，`CLAUDE.md` 提示层作为备用保障。
-2. **历史补录（过往会话）** — `/contour:extract` 扫描过往会话中遗漏的信号；`/contour:sync` 将信号分发到 Domain State。hook 安装前的历史 session 或未被覆盖的 session 可手动执行。
-
-## 示例
-
-### 领域状态文件长什么样
-
-经过几次会话，知界会为每个领域建立你的认知状态档案：
-
-![Domain State 示例](assets/coder.png)
-
-Claude 在每次会话开始时加载此文件，并据此调整沟通方式——已掌握的概念不会过度解释，部分理解的概念不会跳过必要铺垫。
-
-### 会话结束后 — /contour:extract
-
-![extract 输出示例](assets/extract.png)
-
-### 同步到永久状态 — /contour:sync
-
-![sync 输出示例](assets/sync.png)
-
-## 可用命令
-
-| 命令 | 何时运行 | 作用 |
-|---------|-------------|--------------|
-| `/contour:setup` | 安装后运行一次 | 初始化你的核心画像、领域状态和提取缓冲区文件，并将监控指令注入到 `CLAUDE.md` 中 |
-| `/contour:extract` | 在一个重要的会话结束时 | 扫描会话中的认知信号，写入缓冲区 |
-| `/contour:sync` | 在一个新的专用会话中 | 读取缓冲区，更新领域状态，展示思维模式和 Core Profile 候选供你决策，清空缓冲区 |
-| `/contour:uninstall` | 当你想移除知界时 | 从 `CLAUDE.md` 中移除监控指令，可选择删除数据文件 |
-
-### /contour:setup
-
-为你的工作区初始化知界环境。
-
-```bash
-/contour:setup
-```
-
-**作用：**
-- 在你的本地目录中创建必要的数据文件（核心画像、领域状态等）。
-- 将实时监控指令注入到你工作区的 `CLAUDE.md` 文件中。
-- **注意：** 设置完成后，请重启 Claude Code 以激活实时监控指令。
-
-### /contour:extract
-
-从当前会话中提取认知信号。
-
-```bash
-/contour:extract
-```
-
-**何时使用：**
-在一个重要的工作会话结束时运行此命令，特别是当你学习了新概念或展示了对现有概念的掌握时。它会扫描对话历史，并将检测到的信号写入提取缓冲区。
-
-### /contour:sync
-
-将提取的信号同步到你永久的认知状态中。
-
-```bash
-/contour:sync
-```
-
-**何时使用：**
-在一个新的、专用的会话中运行此命令（以避免上下文污染）。它会读取提取缓冲区，更新你的领域状态，展示思维模式观察和 Core Profile 候选供你当场决策，然后清空缓冲区。
-
-### /contour:uninstall
-
-从你的工作区中移除知界。
-
-```bash
-/contour:uninstall
-```
-
-**作用：**
-
-- 从你的 `CLAUDE.md` 中移除知界的监控指令。
-- 可选择提示你删除本地数据文件。
-
-## 环境配置与数据文件
-
-知界默认将数据存储在 `~/.claude/contour/` 目录下。所有文件均为纯 Markdown 格式——可读、可编辑，完全属于你。
-
-### 更改存储位置（可选）
-
-如果你希望将数据同步到云盘（如 OneDrive、百度网盘、iCloud），或者存放在更方便的位置，可以修改默认存储路径。
-
-#### macOS / Linux
-
-1. 用任意文本编辑器打开你的 shell 配置文件：
-   - 使用 Zsh（macOS 默认）：`~/.zshrc`
-   - 使用 Bash：`~/.bashrc`
-
-2. 在文件末尾添加下面这行（将路径替换为你想要的文件夹）：
-
-   ```bash
-   export AI_INFRA_DIR="/Users/你的用户名/OneDrive/contour"
-   ```
-
-3. 保存文件，然后重启终端（或运行 `source ~/.zshrc`）。
-
-4. 运行 `/contour:setup`，知界会在新路径下创建数据文件。
-
-#### Windows
-
-1. 按 `Win + R`，输入 `sysdm.cpl`，回车。
-2. 点击**高级** → **环境变量**。
-3. 在**用户变量**区域，点击**新建**。
-4. 填写：
-   - 变量名：`AI_INFRA_DIR`
-   - 变量值：`C:\Users\你的用户名\OneDrive\contour`（填写实际路径）
-5. 点击确定保存。
-6. **重启 Claude Code** 使配置生效。
-7. 运行 `/contour:setup`，知界会在新路径下创建数据文件。
-
-> **注意：** 如果你在修改路径之前已经运行过 `/contour:setup`，原有数据文件不会自动迁移。你需要手动将 `~/.claude/contour/` 下的文件复制到新目录，或者重新运行 `/contour:setup` 在新路径下初始化。
-
-## 自定义
-
-因为知界将你的认知状态存储在纯 Markdown 文件中，你可以随时手动编辑它们。
-
-- 想要强制 Claude 在特定领域把你当成专家？打开你的 `{user}-{domain}.md` 文件，手动将概念的状态更新为 `mastered`。
-- 想要调整你的沟通偏好？编辑你的 `{user}-core.md` 文件。
-
-知界会在下一次会话中尊重你的手动修改。
-
-## 免责声明
-
-- **文件修改：** `/contour:setup` 命令会修改你当前工作区下的 `CLAUDE.md` 文件，以注入监控指令。
-- **数据隐私：** 所有的认知状态追踪都在你的本地机器上进行。知界本身不会将任何数据发送到外部服务器（尽管 Claude Code 会像往常一样将提示词发送给 Anthropic 的 API）。
-
-## 版本
-
-`v0.3.0` — 预发布版本。正在积极测试中。
-
-## 开源协议
-
-MIT
+MIT，见 [LICENSE](LICENSE)。

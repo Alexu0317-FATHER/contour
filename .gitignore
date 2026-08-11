@@ -20,3 +20,6 @@ docs/history/article-*.md
 
 # 本地工作笔记，不进公开仓
 NOTES.local.md
+
+# 本机权限配置，不进仓（依赖全局 gitignore 不可移植）
+.claude/settings.local.json
