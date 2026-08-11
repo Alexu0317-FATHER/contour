@@ -1,5 +1,56 @@
 # Changelog
 
+## [Unreleased] — 2026-08-11 · 交叉评审合并，知界技能首版草稿
+
+CC 与 Codex 两条并行线的交叉评审结束，结论合并为单一实现。**评审阶段到此为止，两份评审已归档。**
+
+### 文件去哪了
+
+| 原位置 | 新位置 | 说明 |
+|---|---|---|
+| `新知界需求.md`（仓库根） | `docs/新知界需求.md` | **唯一活的需求文档**，新需求写这里 |
+| `NOTES.local.md`（仓库根） | `docs/NOTES.local.md` | 决策记录，仍被 gitignore |
+| `docs/倾倒与同步协议-v0.md` | `docs/history/` | 已吸收进技能，头部标注了每节去向，**不再修改** |
+| `docs/原生记忆可见性测试.md` | `docs/history/` | 同上 |
+| `docs/cc_review.md`、`docs/codex_review.md` | `docs/history/` | 评审存档 |
+
+**规则只活在 `skills/contour/` 一份。** 技能随包分发到各端，`docs/` 不会——规则留在 `docs/` 等于每个端拿到的技能都缺协议。要改规则改技能，不要改归档。
+
+### 新增
+
+- **`references/protocol.md`** —— 数据面。实例仓结构、`endpoint-id` 规范、倾倒包 schema、消费 manifest、基础版本检查、GitHub 通道验证（GH-01～05）。吸收自协议 v0
+- **`references/drive.md`** —— 控制面。确认门槛、隔离执行、hook 与自动化的边界
+- **`assets/templates/`** 新增 `config.md`、`sources.md`、`endpoint-state.md`
+- **`assets/prompts/self-report-incremental.md`** —— 日常增量用，基线 prompt 只在端首次纳入时跑
+- **`scripts/validate_dump.py`、`scripts/new_dump.py`** —— 包 schema 校验与唯一 ID 生成。确定性的活交给脚本，不让模型每次现编
+- **`evals/evals.md`** —— 技能自身的评测规格（开发期工具，不是运行时）
+
+### 冻结的范围
+
+- **端**：ChatGPT、Codex、Claude.ai、Claude Desktop、Claude Code
+- **锚点**：**新建的** GitHub 私有记忆实例仓。现有 `Alexu0317-FATHER/contour` 是技能代码与历史项目仓，有公开发布记录，**不能兼任个人记忆锚点**
+- **退出范围**：Google Drive（后续方向）、Gemini 与国内模型、Notion / Dropbox 等其他后端、"写不进锚点时用户手工搬运"的降级档
+
+### 改了什么
+
+- **资产模型**：五份小写文件 → `config` / `profile` / `now` / `routing` / `sources` / `evidence` / `tests` + `state/endpoints/` + `dumps/` + `review/`。补回 `sources.md`（信息源路由，此前是实质缺口）；同步台账从 `now.md` 拆出去（`now.md` 只放用户状态，游标归各端自己的文件，避免并发热点）
+- **不变量一** 从"五端接同一个实例"改为三条可执行纪律：**一个写入权威 + 读前追平 + 条件写入**。版本号只提供观察不提供互斥，所以锚点必须提供可验证的条件写入
+- **确认门槛**（新增 `SKILL.md` 第零节）：description 匹配 ≠ 执行权限。未获用户明确同意时零外部操作
+- **hook 与定时任务不进 MVP 默认**。原"每轮 Stop 攒 buffer、下次 SessionStart 推送"方案否决——它未经确认就 commit/push，且污染工作会话上下文
+- **时间裁决收紧**：`captured_at` 与触发类型只用于审计，**增量包也不例外**。只有条目级依据（事实发生时间、用户陈述时间、平台记忆创建时间、明确的取代/撤回关系）能裁决
+- **倾倒包不可变**，新包不淘汰旧包。自述是概率性召回不是数据库快照，去重在条目层做
+- **协调者按能力临时接任**，不指定固定协调端；乐观并发靠后端的条件写入
+- **删除语义**：`evidence.md` 不再"永不删"。支持更正（`superseded`）与撤回（不含原文的墓碑）；MVP 不自动重写 Git 历史
+- **测试身份隔离**：主考身份可见题库，被测身份不可见。同一产品可用不同 session 分别承担
+- **Codex 装法改为受管区块**——实测确认 Codex 加载 `AGENTS.md` 但**不展开其中的 `@路径`**，故不能照搬 Claude Code 的活导入
+- 删掉一批无依据的阈值数字（`now.md` 一个月降权、固定 8–12 题），改为从字段变化速度和路由条数推
+
+### 已知未决
+
+见本条目对应 commit 的说明与 `docs/NOTES.local.md`。主要是：新私仓尚未创建、GitHub 发布路径三选一未定、`state/endpoints/` 用 Markdown 还是 YAML、Claude Desktop 的 `@路径` 与记忆归属待测。
+
+---
+
 ## [Unreleased] — 2026-08-07 · Pivot archival
 
 Documentation and archival only. **No change to plugin code, skills, or hooks** — `v0.3.0` remains the installable release and the version in both READMEs is unchanged.
