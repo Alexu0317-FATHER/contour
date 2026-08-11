@@ -14,7 +14,7 @@
 ├── profile.md                         # 慢变画像
 ├── now.md                             # 快变用户状态
 ├── routing.md                         # 常驻：沟通路由 + 记忆关注策略
-├── sources.md                         # 外部权威来源路由
+├── sources.md                         # 动态信源路由 + 知识资产路由
 ├── evidence.md                        # 证据、来源、取代与撤回关系
 ├── tests.md                           # 隐藏题库，不进被测端上下文
 ├── state/
