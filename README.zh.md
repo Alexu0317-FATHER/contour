@@ -39,13 +39,12 @@
 | 端 | 怎么满足 |
 |---|---|
 | **Claude Code / Codex / Zed** | 本机有 git 和该仓库的访问权限就行 |
-| **Claude.ai / ChatGPT** | **挂一个 GitHub MCP 连接器**。GitHub 官方提供远程服务，地址填 `https://api.githubcopilot.com/mcp/` |
+| **ChatGPT** | 设置 → 插件 → 开启 **GitHub 插件**。Plus 就有，不需要 Developer Mode |
+| **Claude.ai** | 挂一个 **GitHub MCP 连接器**，地址填 GitHub 官方的 `https://api.githubcopilot.com/mcp/` |
 
-> ⚠️ **内置的 GitHub 集成不够用。** claude.ai 的 Projects GitHub 集成和 ChatGPT 的 GitHub 连接器**都是只读的**——能让模型读你的仓库，不能提交。而知界要求每个端把自己的记忆**写进**仓库，只读满足不了。
+> ⚠️ **Projects 里那个「用 GitHub 当项目知识」不算数。** 它只把仓库内容同步成可检索的知识，**是只读的**——而知界要求每个端把自己的记忆**写进**仓库。
 >
-> 两者不冲突，可以都开：内置集成让仓库内容变成可检索的项目知识，MCP 连接器负责读写。
-
-**ChatGPT 侧的入口**：Settings → Connectors → 底部 Advanced settings → 打开 Developer Mode。Plus 及以上可用。
+> 两者不冲突，建议都开：一个让仓库内容可检索，一个负责读写。
 
 ## 怎么装
 

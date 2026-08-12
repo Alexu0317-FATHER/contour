@@ -39,13 +39,12 @@ Same idea as a project telling you to install git or node first. **Not meeting t
 | Endpoint | How to satisfy it |
 |---|---|
 | **Claude Code / Codex / Zed** | Local git plus access to the repository is enough |
-| **Claude.ai / ChatGPT** | **Mount a GitHub MCP connector.** GitHub hosts one remotely: `https://api.githubcopilot.com/mcp/` |
+| **ChatGPT** | Settings → Plugins → enable the **GitHub plugin**. Available on Plus; no Developer Mode needed |
+| **Claude.ai** | Mount a **GitHub MCP connector** pointed at GitHub's official remote: `https://api.githubcopilot.com/mcp/` |
 
-> ⚠️ **The built-in GitHub integrations are not enough.** Both claude.ai's Projects GitHub integration and ChatGPT's GitHub connector are **read-only** — they let the model read your repository, not commit to it. Contour needs every endpoint to *write* its own memory dump into the repository, which read-only cannot do.
+> ⚠️ **Using GitHub as Project knowledge does not count.** That only syncs repository contents into searchable knowledge and is **read-only** — whereas Contour needs every endpoint to *write* its own memory dump into the repository.
 >
-> They are not mutually exclusive: keep the built-in integration so the repository becomes searchable project knowledge, and add the MCP connector for read/write.
-
-**Where it lives on ChatGPT**: Settings → Connectors → Advanced settings at the bottom → enable Developer Mode. Available on Plus and above.
+> They are not mutually exclusive; enabling both is recommended: one makes the repo searchable, the other handles read/write.
 
 ## Installing
 
