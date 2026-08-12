@@ -28,6 +28,25 @@ This repository is **mid-rebuild**. There is no release you can install today.
 
 That private repository is yours, not Contour's: you can open it at any time and read every conclusion, where it came from, and which endpoint contributed it when.
 
+## Prerequisites
+
+Same idea as a project telling you to install git or node first. **Not meeting these is not "degraded mode" — it's a failed install.** Contour tells you what is missing rather than quietly shrinking to a half-working setup.
+
+**1. A private GitHub repository of your own.** Contour walks you through creating one; **do not reuse an existing repo** — it will hold your health, family and career material.
+
+**2. Every endpoint you include must be able to read *and write* that repository.**
+
+| Endpoint | How to satisfy it |
+|---|---|
+| **Claude Code / Codex / Zed** | Local git plus access to the repository is enough |
+| **Claude.ai / ChatGPT** | **Mount a GitHub MCP connector.** GitHub hosts one remotely: `https://api.githubcopilot.com/mcp/` |
+
+> ⚠️ **The built-in GitHub integrations are not enough.** Both claude.ai's Projects GitHub integration and ChatGPT's GitHub connector are **read-only** — they let the model read your repository, not commit to it. Contour needs every endpoint to *write* its own memory dump into the repository, which read-only cannot do.
+>
+> They are not mutually exclusive: keep the built-in integration so the repository becomes searchable project knowledge, and add the MCP connector for read/write.
+
+**Where it lives on ChatGPT**: Settings → Connectors → Advanced settings at the bottom → enable Developer Mode. Available on Plus and above.
+
 ## Installing
 
 ### 1. Install the skill (you do this — one command)
