@@ -34,28 +34,49 @@ This repository is **mid-rebuild**. There is no release you can install today.
 
 Your own profile, dumps and evidence do **not** live here. They belong in a separate private repository — this one is public code with a public release history, and personal material has no business in it.
 
-## Installing on each endpoint
+## Installing
 
-What gets installed is one file — `routing.md` (communication routing + memory attention policy). It is the only one that must be present on every turn; everything else is read on demand. **The distinction that matters is not "does this endpoint support skills" but "can this endpoint guarantee `routing.md` is in context before the model starts answering".**
+### 1. Install the skill (you do this — one command)
 
-| Endpoint | Method | Residency guarantee |
-|---|---|---|
-| **Claude Code** | `@<instance-repo>/routing.md` in `CLAUDE.md` | ✅ Expanded deterministically by the harness |
-| **Codex** | Managed block in `AGENTS.md` holding the full text | ✅ Deterministic, but it is a **copy** — regenerate on every sync |
-| **Claude.ai / ChatGPT** | Upload to Project Files / file library, put a one-line pointer in the instructions slot | ⚠️ **Test it immediately**: does the file enter context deterministically, or is it retrieved by relevance? If retrieval, downgrade |
-| None of the above works | Paste a read-only projection into custom instructions, with a generation-date header | ⚠️ A copy; must be re-pasted by hand after each sync |
+```bash
+git clone https://github.com/Alexu0317-FATHER/contour ~/.claude/skills/contour
+```
 
-**Codex does not expand `@path`** — this is a measured result, not an assumption, which is why it uses a managed block rather than an import. Full per-endpoint instructions, the shared discipline for all three copy-based methods, and how "feeding" works are in [`references/load.md`](references/load.md).
+Claude Code inside VS Code reads the same directory, so **one install covers both**.
 
-**Installing the skill ≠ residency.** Skills are progressively disclosed: only the `description` is always present; the body loads once it matches a task. So installing the skill buys you "this endpoint can run the whole flow itself" — not "the routing table is there every turn". **You need both.**
+> ⚠️ `master` still holds the archived previous product; the new skill lives on the `chore/clear-legacy-tree` branch. Until that merges, add `-b chore/clear-legacy-tree`.
 
-## Getting started: one sentence is enough
+**Other endpoints**: how to install the skill package on Codex, Claude.ai, ChatGPT and Zed is `[unverified]` — it will be filled in once each is actually tested. Another product's setup steps do not get written from memory.
 
-Once installed there are no commands to memorise. Say "**sync Contour**" or "**what's Contour's status**" — the skill reads the instance repository first to work out which step you are on (cold start / new endpoint / catch-up / consolidation / dump / audit), then continues from there. You do not have to explain the context.
+### 2. Say one sentence (you do this)
 
-The first run asks which endpoints you use and which are your primary ones, then walks you through choosing an anchor and running a baseline dump on each. **The first unified profile requires baselines from at least two different endpoints** — with only one, what you get is not a cross-endpoint profile, it is that one endpoint repeating itself.
+Once installed, say "**initialise Contour**" anywhere.
 
-**Nothing happens before you say so.** If you merely complain that "this AI doesn't get me", the skill will at most explain itself and ask whether you want to sync — **it will not even read your private repository.** Reading, writing, committing and merging all require an explicit yes.
+The skill asks which endpoints you use and which are primary, then walks you through creating a private instance repository and running a baseline dump on each. **The first unified profile requires baselines from at least two different endpoints** — with only one, what you get is not a cross-endpoint profile, it is that one endpoint repeating itself.
+
+After that, "**sync Contour**" or "**what's Contour's status**" is all you need. The skill reads the instance repository to work out which step you are on (catch-up / consolidation / dump / audit). **No context to explain, no commands to memorise.**
+
+### 3. Config files are written by the skill (not by you)
+
+**You never hand-edit a `CLAUDE.md` or `AGENTS.md`.** The skill:
+
+- writes an import line pointing at your source of truth into **global** `~/.claude/CLAUDE.md`
+- writes a marked block into **global** `~/.codex/AGENTS.md` (Codex does not expand `@path` — a measured result — so that side gets the full text)
+- refreshes both after every sync
+
+**It never touches the `CLAUDE.md` / `AGENTS.md` inside your projects.** Those may be committed to git, shared with colleagues, and carry the project's own conventions — no personal-profile tool has any business editing them.
+
+### The one step that stays manual: uploading a file to web endpoints
+
+Claude.ai and ChatGPT offer **no official API** for updating their project files (third-party sync tools run on session cookies and fail silently when those expire, so the skill does not recommend them). After each sync the skill generates a dated `routing.md` and tells you it's ready; you drag it into Project Files / the file library.
+
+There is no way around this step, but it is **infrequent** — that file changes on the order of months. **Day-to-day dumping and reading go through connectors; you carry nothing.**
+
+### Nothing happens before you say so
+
+If you merely complain that "this AI doesn't get me", the skill will at most explain itself and ask whether you want to sync — **it will not even read your private repository.** Reading, writing, committing and merging all require an explicit yes.
+
+Which loading mechanism each endpoint actually uses, why, and how copies are kept from going stale: [`references/load.md`](references/load.md).
 
 ## Design commitments
 
