@@ -1,12 +1,32 @@
 # Changelog
 
-## [Unreleased] — 2026-08-12 · 技能目录扁平化到仓库根
+## [Unreleased] — 2026-08-12 · 目录布局与分发通道
 
-技能内容从 `skills/contour/` 上提到仓库根，去掉多余的 `skills/` 容器层与 `contour/` 嵌套层，使 `SKILL.md` 直接位于根目录，贴合 Anthropic Agent Skills 的单技能仓库惯例（`<skill>/SKILL.md`，中间不再套壳）。
+### 一度扁平化到根，又改回 `skills/contour/`
 
-- **移动**：`skills/contour/{SKILL.md,references,assets,scripts,evals}` → 仓库根（`git mv` 保留历史），删除空的 `skills/` 目录
-- **文档路径同步**：`README.md`、`README.zh.md`、`CHANGELOG.md`、`docs/新知界需求.md`、`docs/roadmap/锚点适配路线图.md` 中指向 `skills/contour/` 的引用改为根路径；`docs/history/` 下 4 份归档评审文档的跨仓链接一并更新为可点击的新路径
-- 脚本与技能内容未改动，仅位置变化
+先把技能上提到仓库根（`adf2ad9`），理由是贴合 Anthropic Agent Skills 的单技能仓库惯例（`<skill>/SKILL.md`）。**惯例本身是真的，但它成立的前提是"这个仓就是这个技能"**——而本仓还装着 `docs/新知界需求.md`、`docs/roadmap/`、`docs/history/`、`evals/`、CHANGELOG，它是**项目开发仓，不是技能分发包**。前提不成立，所以改回来（`7a955c3`）。
+
+查证之后，四条安装通道**没有一条**要求"仓库根即技能根"：
+
+| 通道 | 实际从仓库取什么 |
+|---|---|
+| plugin marketplace（claude.ai + Claude Code 一次覆盖） | 读根上的 `.claude-plugin/marketplace.json` |
+| Codex `skill-installer` | `--repo <owner>/<repo> --path <技能子目录>`，只取子目录 |
+| claude.ai 手动上传 | 打包 zip，只含技能部分 |
+| 本地手动装 | 复制或软链技能目录 |
+
+三条只取子目录，一条读根上的清单。扁平化没给任何一条带来好处，**只挡死了 marketplace**——而 claude.ai 的 Plugins 页能直接把 GitHub 仓添加为 marketplace，那是唯一能一次覆盖 claude.ai 与 Claude Code 的通道。
+
+- **新增 `.claude-plugin/marketplace.json` 与 `plugin.json`**（`source: "./"`）
+- **`evals/` 留在仓库根，不进技能包**：它评的是技能自身，且内容是编造的测试场景，混进运行时可能被模型误当成用户的真实状态——跟 `tests.md` 绝不进被测端上下文同属一类风险
+- 活文档路径引用同步更新，已脚本校验无死链
+
+### 查证到的分发事实（此前全是推测）
+
+- **Codex 有原生技能目录** `$CODEX_HOME/skills/<name>`（默认 `~/.codex/skills`），格式与 Claude 完全一致；`.system/skill-installer` 可从任意 GitHub 仓安装，**含私有仓**
+- **claude.ai 账号级技能覆盖 chat、Cowork 与 Excel / Word / PPT / Outlook 加载项**；Claude in Chrome 未见文档说明，待测
+- **本地 `~/.claude/skills/` 与 claude.ai 账号技能互不同步**，两个层级各自独立；plugin marketplace 是唯一能同时覆盖两边的通道
+- **技能默认就有 `/skill-name` 显式唤醒**，自定义命令已并入技能；`disable-model-invocation: true` 可让某个技能**只有用户能唤起**，由 harness 拦截模型调用
 
 ## [Unreleased] — 2026-08-11 · 交叉评审合并，知界技能首版草稿
 
