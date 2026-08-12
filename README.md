@@ -22,20 +22,11 @@ This repository is **mid-rebuild**. There is no release you can install today.
 
 **Everything the old README described — `/contour:sync`, `/contour:extract`, the Stop hook, Domain State — belongs to that archived version and no longer exists in the working tree.**
 
-## Where things live
+## Where your data lives
 
-| Path | What it is |
-|---|---|
-| [`docs/新知界需求.md`](docs/新知界需求.md) | The single requirements spec for the current version; only capabilities intended for the current implementation belong here |
-| [`docs/roadmap/`](docs/roadmap/) | Confirmed future capabilities that are not part of the current version; each topic gets its own document until it is ready to enter the requirements or skill |
-| [`docs/平台能力实测.md`](docs/平台能力实测.md) | **Verified** capability limits of each endpoint and each anchor backend, every claim dated and tagged with its evidence level. Whether a backend is supported is decided by facts, not wishes |
-| [`skills/contour/`](skills/contour/) | **The skill itself** — this directory is what gets distributed to each endpoint. Rules live here and nowhere else, because `docs/` does not travel with it |
-| [`.claude-plugin/`](.claude-plugin/) | Plugin manifests, so claude.ai and Claude Code can add this repository directly as a marketplace |
-| [`evals/`](evals/) | Evaluation spec for **the skill itself** (a build-time tool; not distributed). Measuring whether your endpoints converged is `tests.md` inside the skill — a different thing |
-| [`docs/history/`](docs/history/) | Archived design drafts, cross-reviews, and the previous product's documentation |
-| [`CHANGELOG.md`](CHANGELOG.md) | What changed each iteration |
+**Not in this repository.** Contour walks you through creating **your own private repository**, and your profile, dumps and evidence live there — this repo is public code, and personal material has no business in it.
 
-Your own profile, dumps and evidence do **not** live here. They belong in a separate private repository — this one is public code with a public release history, and personal material has no business in it.
+That private repository is yours, not Contour's: you can open it at any time and read every conclusion, where it came from, and which endpoint contributed it when.
 
 ## Installing
 
@@ -91,3 +82,7 @@ Which loading mechanism each endpoint actually uses, why, and how copies are kep
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+---
+
+<sub>Working on Contour itself, or wondering why a design decision went the way it did? Start from [`docs/新知界需求.md`](docs/新知界需求.md).</sub>
