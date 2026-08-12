@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] — 2026-08-12 · 技能目录扁平化到仓库根
+
+技能内容从 `skills/contour/` 上提到仓库根，去掉多余的 `skills/` 容器层与 `contour/` 嵌套层，使 `SKILL.md` 直接位于根目录，贴合 Anthropic Agent Skills 的单技能仓库惯例（`<skill>/SKILL.md`，中间不再套壳）。
+
+- **移动**：`skills/contour/{SKILL.md,references,assets,scripts,evals}` → 仓库根（`git mv` 保留历史），删除空的 `skills/` 目录
+- **文档路径同步**：`README.md`、`README.zh.md`、`CHANGELOG.md`、`docs/新知界需求.md`、`docs/roadmap/锚点适配路线图.md` 中指向 `skills/contour/` 的引用改为根路径；`docs/history/` 下 4 份归档评审文档的跨仓链接一并更新为可点击的新路径
+- 脚本与技能内容未改动，仅位置变化
+
 ## [Unreleased] — 2026-08-11 · 交叉评审合并，知界技能首版草稿
 
 CC 与 Codex 两条并行线的交叉评审结束，结论合并为单一实现。**评审阶段到此为止，两份评审已归档。**
@@ -15,7 +23,7 @@ CC 与 Codex 两条并行线的交叉评审结束，结论合并为单一实现�
 | `docs/原生记忆可见性测试.md` | `docs/history/` | 同上 |
 | `docs/cc_review.md`、`docs/codex_review.md` | `docs/history/` | 评审存档 |
 
-**规则只活在 `skills/contour/` 一份。** 技能随包分发到各端，`docs/` 不会——规则留在 `docs/` 等于每个端拿到的技能都缺协议。要改规则改技能，不要改归档。
+**规则只活在仓库根的技能一份。** 技能随包分发到各端，`docs/` 不会——规则留在 `docs/` 等于每个端拿到的技能都缺协议。要改规则改技能，不要改归档。
 
 ### 新增
 

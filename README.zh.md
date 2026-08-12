@@ -16,7 +16,7 @@
 
 | | |
 |---|---|
-| **有什么** | [`skills/contour/`](skills/contour/) 下的技能草稿——协议、参考文档、模板和校验脚本 |
+| **有什么** | 仓库根目录下的技能草稿（[`SKILL.md`](SKILL.md)、[`references/`](references/)、[`assets/`](assets/)、[`scripts/`](scripts/)）——协议、参考文档、模板和校验脚本 |
 | **没有什么** | 跑得通的完整实现。GitHub 实例仓、通道验证、端能力探测都还没实际跑过 |
 | **上一版** | 标签 `v0.3.0-cognitive` 及其 [GitHub Release](https://github.com/Alexu0317-FATHER/contour/releases)——那是另一个产品（认知状态追踪），跑了一个多月。改动原因见 [`docs/history/PIVOT.md`](docs/history/PIVOT.md) |
 
@@ -28,7 +28,7 @@
 |---|---|
 | [`docs/新知界需求.md`](docs/新知界需求.md) | 当前版本的唯一需求规格；只有准备进入当前实现的能力才写进这里 |
 | [`docs/roadmap/`](docs/roadmap/) | 已确认但暂不进入当前版本的后续能力；每个主题单独成文，成熟后再进入需求或技能 |
-| [`skills/contour/`](skills/contour/) | 技能本体。规则只活在这里，因为分发到各端的是技能，不是 `docs/` |
+| [`SKILL.md`](SKILL.md) + [`references/`](references/) / [`assets/`](assets/) / [`scripts/`](scripts/) | 技能本体，位于仓库根目录。规则只活在这里，因为分发到各端的是技能，不是 `docs/` |
 | [`docs/history/`](docs/history/) | 归档的设计草案、交叉评审，以及上一版产品的文档 |
 | [`CHANGELOG.md`](CHANGELOG.md) | 每次迭代改了什么 |
 

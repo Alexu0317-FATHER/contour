@@ -1,13 +1,13 @@
 # Codex 交叉评审：需求、协议与 CC 技能草稿
 
-> **⚠ 已归档（2026-08-10）。评审阶段到此结束，结论已合并进 `新知界需求.md` 与 `skills/contour/`。**
+> **⚠ 已归档（2026-08-10）。评审阶段到此结束，结论已合并进 `新知界需求.md` 与 ``。**
 > 保留作为决策依据的记录，不再修改。文中引用的行号对应评审当时的文件状态。
 > 本文第 202-236 行的"合并后 MVP 结构"与"唯一同步状态机"是本轮合并的工作基线。
 
 > 评审对象：
 >
 > - Codex：[`新知界需求.md`](../新知界需求.md)、[`倾倒与同步协议-v0.md`](倾倒与同步协议-v0.md)、[`原生记忆可见性测试.md`](原生记忆可见性测试.md)
-> - CC：[`skills/contour/`](../../skills/contour/)、`docs/NOTES.local.md`（本地限定，未进仓库）
+> - CC：[根技能目录](../../)、`docs/NOTES.local.md`（本地限定，未进仓库）
 >
 > 本评审基于 2026-08-10 当前工作区快照。CC 草稿在评审期间未发生变化；本文件只做评审，不修改双方原文。
 
@@ -53,7 +53,7 @@
 
 ### 倾倒时间不能获得“例外裁决权”
 
-[`references/consolidate.md`](../../skills/contour/references/consolidate.md) 第 75–78 行和 [`references/dump.md`](../../skills/contour/references/dump.md) 第 40 行认为：由事件或用户触发的倾倒，其捕获时间可以近似代表本端最后产生新内容的时间，因此可以参与时效裁决。
+[`references/consolidate.md`](../../references/consolidate.md) 第 75–78 行和 [`references/dump.md`](../../references/dump.md) 第 40 行认为：由事件或用户触发的倾倒，其捕获时间可以近似代表本端最后产生新内容的时间，因此可以参与时效裁决。
 
 这个推理不成立。一次“刚聊完后的倾倒”仍然可能吐出多年前形成、刚刚才被召回的旧记忆；另一个端晚几分钟倾倒，也可能只是重新描述更旧的状态。触发方式可以表示包的产生背景，不能把包内所有条目变成同一个事实时间。
 
@@ -65,7 +65,7 @@
 
 ### 同端新包不能覆盖未处理旧包
 
-[`references/dump.md`](../../skills/contour/references/dump.md) 第 44 行和 [`references/drive.md`](../../skills/contour/references/drive.md) 第 61 行规定，同端新包可以把尚未处理的旧包移入 `processed/`。
+[`references/dump.md`](../../references/dump.md) 第 44 行和 [`references/drive.md`](../../references/drive.md) 第 61 行规定，同端新包可以把尚未处理的旧包移入 `processed/`。
 
 这会丢信息。原生记忆自述不是数据库快照：同一端第二次可能想起 A、忘了第一次吐出的 B。较新包只能补充或更正旧包，不能证明旧包已被完整包含。
 
@@ -73,7 +73,7 @@
 
 ### “任何后端都能乐观并发”说得过头
 
-[`references/drive.md`](../../skills/contour/references/drive.md) 第 73–79 行认为，裸文件只要在台账里留版本号，也能不依赖锁实现乐观并发。这里缺少最关键的一步：**检查基础版本和提交写入必须由后端提供原子性的条件更新，或通过可串行化的发布路径实现。**
+[`references/drive.md`](../../references/drive.md) 第 73–79 行认为，裸文件只要在台账里留版本号，也能不依赖锁实现乐观并发。这里缺少最关键的一步：**检查基础版本和提交写入必须由后端提供原子性的条件更新，或通过可串行化的发布路径实现。**
 
 两个端都读到 v5、都检查“仍是 v5”、随后分别覆盖普通文件，最后一个写入者仍会静默覆盖前一个。版本号只提供观察，不自动提供互斥。
 
@@ -81,7 +81,7 @@ MVP 已选择 GitHub，因此应明确使用 GitHub 可验证的基础提交检�
 
 ### 交互入口与已确认方案冲突
 
-[`SKILL.md`](../../skills/contour/SKILL.md) 第 93–102 行把循环拆成“进来追平、出去倾倒”，并坚持用户说“倾倒一下”而不是“同步一下”。进出时机的分析有价值，但不该变成产品入口。
+[`SKILL.md`](../../SKILL.md) 第 93–102 行把循环拆成“进来追平、出去倾倒”，并坚持用户说“倾倒一下”而不是“同步一下”。进出时机的分析有价值，但不该变成产品入口。
 
 已确认的交互应是：用户在当前端说“同步知界”或调用技能，技能按状态执行当前能够完成的闭环——先保护本端增量，再处理锚点待办，最后让当前端读取最新统一结果。支持 hook 的端可以把捕获、推送、拉取拆到不同事件中，但这些只是同一状态机的实现细节。
 
@@ -104,7 +104,7 @@ CC 把信源位置、所有端的接入方式、最后加载时间和探测结�
 
 ### “只追加、不改不删”侵犯了已确认的数据权利
 
-[`references/schema.md`](../../skills/contour/references/schema.md) 第 71 行和 `assets/templates/evidence.md` 都把 `evidence.md` 定义为永不删除。普通修订采用追加和取代记录是合理的，但用户明确要求更正、撤回或删除个人数据时，技能必须支持。
+[`references/schema.md`](../../references/schema.md) 第 71 行和 `assets/templates/evidence.md` 都把 `evidence.md` 定义为永不删除。普通修订采用追加和取代记录是合理的，但用户明确要求更正、撤回或删除个人数据时，技能必须支持。
 
 需要区分：
 
@@ -116,13 +116,13 @@ CC 把信源位置、所有端的接入方式、最后加载时间和探测结�
 
 ### 平台装载机制必须实测，不能写成已确认事实
 
-[`references/load.md`](../../skills/contour/references/load.md) 第 57 行把 Codex `AGENTS.md` 的 `@路径` 导入写成确定性能力。当前 OpenAI 官方说明的是 `AGENTS.md` 的逐层发现、作用域与拼接，没有把 Claude 风格的 `@path` 展开列为 Codex 支持能力。因此它最多是待验证适配器，不能成为 Codex 的默认装载基线。参见 [OpenAI Codex：Custom instructions with AGENTS.md](https://developers.openai.com/codex/guides/agents-md)。
+[`references/load.md`](../../references/load.md) 第 57 行把 Codex `AGENTS.md` 的 `@路径` 导入写成确定性能力。当前 OpenAI 官方说明的是 `AGENTS.md` 的逐层发现、作用域与拼接，没有把 Claude 风格的 `@path` 展开列为 Codex 支持能力。因此它最多是待验证适配器，不能成为 Codex 的默认装载基线。参见 [OpenAI Codex：Custom instructions with AGENTS.md](https://developers.openai.com/codex/guides/agents-md)。
 
 Codex 端应优先使用官方的 `AGENTS.md` 层级与生成的受管内容块；任何 `@path`、网页项目文件是否每轮确定性注入、黑盒记忆是否读取上下文等假设，都放进端能力测试，验证后再启用。
 
 ### 人工搬运只能是恢复路径
 
-[`references/dump.md`](../../skills/contour/references/dump.md) 第 30 行和 [`references/drive.md`](../../skills/contour/references/drive.md) 第 91 行仍把用户手动搬运视为“可用但不能自动化”的端。
+[`references/dump.md`](../../references/dump.md) 第 30 行和 [`references/drive.md`](../../references/drive.md) 第 91 行仍把用户手动搬运视为“可用但不能自动化”的端。
 
 产品边界应更严格：写不进统一锚点的端可以读取统一结果，属于只读或部分接入；它没有完成双向知界同步。用户手工复制可以用于首次诊断、授权受阻时的临时恢复，但不能成为日常支持矩阵中的正常通道，否则会回到用户最初明确拒绝的工作方式。
 
@@ -130,7 +130,7 @@ Codex 端应优先使用官方的 `AGENTS.md` 层级与生成的受管内容块�
 
 ### 直接采用自述提示词骨架
 
-CC 的 [`assets/prompts/self-report.md`](../../skills/contour/assets/prompts/self-report.md) 是当前双方材料里最接近可运行资产的部分。它要求逐条输出、区分 `[记]` 与 `[推]`、保留用户原话、专门寻找否决理由和沟通纠正，并在末尾确认是否还有更多。这正好补足 Codex 协议“列了字段但没有足够强的召回手段”的问题。
+CC 的 [`assets/prompts/self-report.md`](../../assets/prompts/self-report.md) 是当前双方材料里最接近可运行资产的部分。它要求逐条输出、区分 `[记]` 与 `[推]`、保留用户原话、专门寻找否决理由和沟通纠正，并在末尾确认是否还有更多。这正好补足 Codex 协议“列了字段但没有足够强的召回手段”的问题。
 
 需要增加的是包级元数据、条目级来源/事实时间/更正关系，以及一份更短的日常增量提示词。冷启动可以深挖，日常每次都跑完整基线提示会造成噪音和重复。
 
@@ -157,7 +157,7 @@ CC 的“先读锚点，再判断是冷启动、新端接入还是日常维护�
 
 CC 明确要求 `tests.md` 不进入被测端上下文，并用场景判断测试沟通和决策行为，而不是考“女儿几岁”之类的知识背诵。这一设计应直接并入 Codex 的测试文档。
 
-但 [`references/audit.md`](../../skills/contour/references/audit.md) 第 115 行所说“没有产生改动的体检就说明没必要跑”需要删除。无变化可能恰恰证明一次路由改动没有引入回归，或多个端仍维持可接受的趋同。体检产物可以是“无需修正，证据更新”，不必强迫每次都改文件。
+但 [`references/audit.md`](../../references/audit.md) 第 115 行所说“没有产生改动的体检就说明没必要跑”需要删除。无变化可能恰恰证明一次路由改动没有引入回归，或多个端仍维持可接受的趋同。体检产物可以是“无需修正，证据更新”，不必强迫每次都改文件。
 
 ### 保留探测思想，补控制组与清理动作
 

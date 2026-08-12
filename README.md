@@ -16,7 +16,7 @@ This repository is **mid-rebuild**. There is no release you can install today.
 
 | | |
 |---|---|
-| **What's here** | A skill draft under [`skills/contour/`](skills/contour/) — protocol, references, templates and validation scripts |
+| **What's here** | A skill draft at the repository root ([`SKILL.md`](SKILL.md), [`references/`](references/), [`assets/`](assets/), [`scripts/`](scripts/)) — protocol, references, templates and validation scripts |
 | **What's not** | A working end-to-end implementation. The GitHub instance repository, channel verification and endpoint probes have not been run yet |
 | **Previous version** | Tag `v0.3.0-cognitive` and its [GitHub Release](https://github.com/Alexu0317-FATHER/contour/releases) — a different product (cognitive-state tracking) that ran for over a month. See [`docs/history/PIVOT.md`](docs/history/PIVOT.md) for what changed and why |
 
@@ -28,7 +28,7 @@ This repository is **mid-rebuild**. There is no release you can install today.
 |---|---|
 | [`docs/新知界需求.md`](docs/新知界需求.md) | The single requirements spec for the current version; only capabilities intended for the current implementation belong here |
 | [`docs/roadmap/`](docs/roadmap/) | Confirmed future capabilities that are not part of the current version; each topic gets its own document until it is ready to enter the requirements or skill |
-| [`skills/contour/`](skills/contour/) | The skill itself. Rules live here and nowhere else, because the skill is what gets distributed to each endpoint |
+| [`SKILL.md`](SKILL.md) + [`references/`](references/) / [`assets/`](assets/) / [`scripts/`](scripts/) | The skill itself, at the repository root. Rules live here and nowhere else, because the skill is what gets distributed to each endpoint |
 | [`docs/history/`](docs/history/) | Archived design drafts, cross-reviews, and the previous product's documentation |
 | [`CHANGELOG.md`](CHANGELOG.md) | What changed each iteration |
 
