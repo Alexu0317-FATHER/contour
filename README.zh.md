@@ -16,7 +16,7 @@
 
 | | |
 |---|---|
-| **有什么** | 仓库根目录下的技能草稿（[`SKILL.md`](SKILL.md)、[`references/`](references/)、[`assets/`](assets/)、[`scripts/`](scripts/)）——协议、参考文档、模板和校验脚本 |
+| **有什么** | [`skills/contour/`](skills/contour/) 下的技能草稿——协议、参考文档、模板和校验脚本 |
 | **没有什么** | 跑得通的完整实现。私有实例仓的空骨架已经建好（2026-08-12），但**通道验证 GH-01～06 还没在任何一端跑过**，也没有任何一份统一资产 |
 | **上一版** | 标签 `v0.3.0-cognitive` 及其 [GitHub Release](https://github.com/Alexu0317-FATHER/contour/releases)——那是另一个产品（认知状态追踪），跑了一个多月。改动原因见 [`docs/history/PIVOT.md`](docs/history/PIVOT.md) |
 
@@ -28,7 +28,9 @@
 |---|---|
 | [`docs/新知界需求.md`](docs/新知界需求.md) | 当前版本的唯一需求规格；只有准备进入当前实现的能力才写进这里 |
 | [`docs/roadmap/`](docs/roadmap/) | 已确认但暂不进入当前版本的后续能力；每个主题单独成文，成熟后再进入需求或技能 |
-| [`SKILL.md`](SKILL.md) + [`references/`](references/) / [`assets/`](assets/) / [`scripts/`](scripts/) | 技能本体，位于仓库根目录。规则只活在这里，因为分发到各端的是技能，不是 `docs/` |
+| [`skills/contour/`](skills/contour/) | **技能本体**——分发到各端的就是这个目录。规则只活在这里，因为 `docs/` 不会跟着走 |
+| [`.claude-plugin/`](.claude-plugin/) | 插件清单，让 claude.ai 和 Claude Code 能把这个仓当 marketplace 直接加 |
+| [`evals/`](evals/) | **技能自己的**评测规格（开发期工具，不随技能分发）。测各端有没有趋同的是技能包里的 `tests.md`，两件事 |
 | [`docs/history/`](docs/history/) | 归档的设计草案、交叉评审，以及上一版产品的文档 |
 | [`CHANGELOG.md`](CHANGELOG.md) | 每次迭代改了什么 |
 
@@ -76,7 +78,7 @@ Claude.ai 和 ChatGPT **没有官方接口**能让程序更新它们的项目文
 
 你随口抱怨一句「这 AI 根本不了解我」，技能最多解释一下、问你要不要同步——**连读你的私有仓都不会做**。读、写、提交、合并全都要你明确点头。
 
-各端背后到底用哪种加载机制、为什么这么选、副本怎么防过期，见 [`references/load.md`](references/load.md)。
+各端背后到底用哪种加载机制、为什么这么选、副本怎么防过期，见 [`skills/contour/references/load.md`](skills/contour/references/load.md)。
 
 ## 几条设计承诺
 

@@ -1,0 +1,10 @@
+{
+  "name": "contour",
+  "description": "Build and maintain a portable personal profile across Claude Code, Codex, Claude.ai and ChatGPT, so their memories and communication strategies converge on one source of truth.",
+  "version": "0.4.0-dev",
+  "author": {
+    "name": "Alexu0317-FATHER"
+  },
+  "homepage": "https://github.com/Alexu0317-FATHER/contour",
+  "license": "MIT"
+}

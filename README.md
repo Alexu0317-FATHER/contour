@@ -16,7 +16,7 @@ This repository is **mid-rebuild**. There is no release you can install today.
 
 | | |
 |---|---|
-| **What's here** | A skill draft at the repository root ([`SKILL.md`](SKILL.md), [`references/`](references/), [`assets/`](assets/), [`scripts/`](scripts/)) — protocol, references, templates and validation scripts |
+| **What's here** | A skill draft under [`skills/contour/`](skills/contour/) — protocol, references, templates and validation scripts |
 | **What's not** | A working end-to-end implementation. The private instance repository now has an empty skeleton (2026-08-12), but **channel verification GH-01–06 has not been run on any endpoint**, and no unified assets exist |
 | **Previous version** | Tag `v0.3.0-cognitive` and its [GitHub Release](https://github.com/Alexu0317-FATHER/contour/releases) — a different product (cognitive-state tracking) that ran for over a month. See [`docs/history/PIVOT.md`](docs/history/PIVOT.md) for what changed and why |
 
@@ -28,7 +28,9 @@ This repository is **mid-rebuild**. There is no release you can install today.
 |---|---|
 | [`docs/新知界需求.md`](docs/新知界需求.md) | The single requirements spec for the current version; only capabilities intended for the current implementation belong here |
 | [`docs/roadmap/`](docs/roadmap/) | Confirmed future capabilities that are not part of the current version; each topic gets its own document until it is ready to enter the requirements or skill |
-| [`SKILL.md`](SKILL.md) + [`references/`](references/) / [`assets/`](assets/) / [`scripts/`](scripts/) | The skill itself, at the repository root. Rules live here and nowhere else, because the skill is what gets distributed to each endpoint |
+| [`skills/contour/`](skills/contour/) | **The skill itself** — this directory is what gets distributed to each endpoint. Rules live here and nowhere else, because `docs/` does not travel with it |
+| [`.claude-plugin/`](.claude-plugin/) | Plugin manifests, so claude.ai and Claude Code can add this repository directly as a marketplace |
+| [`evals/`](evals/) | Evaluation spec for **the skill itself** (a build-time tool; not distributed). Measuring whether your endpoints converged is `tests.md` inside the skill — a different thing |
 | [`docs/history/`](docs/history/) | Archived design drafts, cross-reviews, and the previous product's documentation |
 | [`CHANGELOG.md`](CHANGELOG.md) | What changed each iteration |
 
@@ -76,7 +78,7 @@ There is no way around this step, but it is **infrequent** — that file changes
 
 If you merely complain that "this AI doesn't get me", the skill will at most explain itself and ask whether you want to sync — **it will not even read your private repository.** Reading, writing, committing and merging all require an explicit yes.
 
-Which loading mechanism each endpoint actually uses, why, and how copies are kept from going stale: [`references/load.md`](references/load.md).
+Which loading mechanism each endpoint actually uses, why, and how copies are kept from going stale: [`skills/contour/references/load.md`](skills/contour/references/load.md).
 
 ## Design commitments
 
