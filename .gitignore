@@ -9,6 +9,7 @@ Desktop.ini
 *~
 .vscode/
 .idea/
+.obsidian/
 
 # Node (if needed later)
 node_modules/

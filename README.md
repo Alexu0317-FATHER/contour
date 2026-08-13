@@ -32,7 +32,7 @@ That private repository is yours, not Contour's: you can open it at any time and
 
 Same idea as a project telling you to install git or node first. **Not meeting these is not "degraded mode" — it's a failed install.** Contour tells you what is missing rather than quietly shrinking to a half-working setup.
 
-**1. A private GitHub repository of your own.** Contour walks you through creating one; **do not reuse an existing repo** — it will hold your health, family and career material.
+**1. A private GitHub repository dedicated to Contour data.** If you already have one, provide its URL and Contour will verify privacy, access, and structure. If you do not have a GitHub account or a dedicated repository, Contour guides you through signup, authorization, and private-repository creation. You handle login, verification codes, and consent; the Agent handles the creation and configuration it is authorized to perform. **Do not reuse a repository that contains another project** — this one may hold health, family, and career material.
 
 **2. Every endpoint you include must be able to read *and write* that repository.**
 
@@ -40,11 +40,11 @@ Same idea as a project telling you to install git or node first. **Not meeting t
 |---|---|
 | **Claude Code / Codex / Zed** | Local git plus access to the repository is enough |
 | **ChatGPT** | Settings → Plugins → enable the **GitHub plugin**. Available on Plus; no Developer Mode needed |
-| **Claude.ai** | Mount a **GitHub MCP connector** pointed at GitHub's official remote: `https://api.githubcopilot.com/mcp/` |
+| **Claude.ai Chat / Projects** | The built-in GitHub integration only reads and syncs project knowledge. In the current-account test, Chat's temporary code environment could edit files and commit locally but had no GitHub credentials to push. Bidirectional sync still requires a **verified writable** remote-MCP path; GitHub's official remote MCP has not yet been verified inside claude.ai Chat |
 
-> ⚠️ **Using GitHub as Project knowledge does not count.** That only syncs repository contents into searchable knowledge and is **read-only** — whereas Contour needs every endpoint to *write* its own memory dump into the repository.
+> ⚠️ **Using GitHub as Project knowledge does not count as bidirectional access.** It syncs repository files into searchable knowledge but cannot submit a dump package.
 >
-> They are not mutually exclusive; enabling both is recommended: one makes the repo searchable, the other handles read/write.
+> The **Code** tab in claude.ai is a Claude Code session surface. It can display or remotely control local Claude Code sessions and can also start cloud Claude Code tasks; repository access depends on the underlying CC session and authorization. It is not ordinary Chat and **does not share Chat's native memory**, so Code-tab capabilities cannot stand in for Chat's write path.
 
 ## Installing
 
@@ -80,9 +80,9 @@ After that, "**sync Contour**" or "**what's Contour's status**" is all you need.
 
 ### The one step that stays manual: uploading a file to web endpoints
 
-Claude.ai and ChatGPT offer **no official API** for updating their project files (third-party sync tools run on session cookies and fail silently when those expire, so the skill does not recommend them). After each sync the skill generates a dated `routing.md` and tells you it's ready; you drag it into Project Files / the file library.
+Contour has not yet **verified** a stable path that directly updates project files in Claude.ai Chat or ChatGPT (third-party sync tools run on session cookies and fail silently when those expire, so the skill does not recommend them). For now, the workflow generates a dated `routing.md` and tells you when to drag it into Project Files / the file library.
 
-There is no way around this step, but it is **infrequent** — that file changes on the order of months. **Day-to-day dumping and reading go through connectors; you carry nothing.**
+Until a new official path is verified and integrated, this remains an **infrequent manual action** because the file changes slowly. **Day-to-day dumping and reading avoid manual carrying only on endpoints whose repository read/write path has actually been verified.**
 
 ### Nothing happens before you say so
 

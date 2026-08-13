@@ -1,5 +1,25 @@
 # Changelog
 
+## [Unreleased] — 2026-08-13 · 安装前交互审查基线
+
+把已经确认的事实纠正与初始化边界调整固化成一份可引用的审查基线，并将后续动态任务迁到 GitHub Issues + Project。**这份基线之后，安装前验收的任务真相以 Issues / Project 为准，不再靠本地看板文件。**
+
+### 已完成的事实纠正（平台能力实测）
+
+- **ChatGPT 第一方 GitHub 插件能写仓库**，此前“ChatGPT 只读”的判断已撤销：入口为设置 → 插件 → GitHub，Plus 可用，已确认 `Update file`（走 contents API、返回 commit SHA）。连接器（只读）、第一方插件（可写）、GitHub MCP 三条路径分开记录，不再混称“GitHub 集成”。
+- **`push_files` 的多文件单提交与非强制 ref 更新由官方源码确认**，不再作为需要用户破坏性实测才能发现的未知；GH-06 降级为选定适配器上的回归验证。
+- **claude.ai 按界面拆开**：Chat / Projects 的内置 GitHub 只读同步、普通 Chat 临时代码环境可本地 commit 但无凭据不能 push、左侧 Code 标签属于 Claude Code 会话体系、远程 MCP 为待验证候选路径——不再统称“claude.ai 网页端”，Code 标签的记忆不等于 Chat 的原生记忆。
+
+### 初始化边界调整
+
+- 冷启动不再无条件要求新建仓库：已有专用私仓时由 Agent 验证私有性、权限与目录结构后直接使用；没有账号或专用仓库时，由 Agent 引导注册、授权并在获权后代建私仓与初始化结构，用户只负责登录、验证码和授权确认。
+- 明确当前首个验收组合为 ChatGPT + Claude Code + 已有 GitHub 私仓。
+
+### 分发与忽略
+
+- `.claude-plugin/plugin.json` 开发版本 `0.4.0-dev` → `0.4.1-dev`。
+- `.gitignore` 新增 `.obsidian/`，防止编辑器状态混入提交。
+
 ## [Unreleased] — 2026-08-12 · 目录布局与分发通道
 
 ### 一度扁平化到根，又改回 `skills/contour/`
