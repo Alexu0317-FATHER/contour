@@ -1,0 +1,5 @@
+interface:
+  display_name: "知界 · 同步"
+  short_description: "把各个 AI 的新记忆同步进知界档案"
+policy:
+  allow_implicit_invocation: false

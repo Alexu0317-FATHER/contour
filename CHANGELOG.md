@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.6.2] — 2026-09-19 · 快捷命令、汇报模板、上架材料
+
+### 技能
+
+- 新增快捷命令 `contour-sync`、`contour-status`，分别转交主技能执行同步和查看状态。Claude 用 `/contour-sync`，Codex 用 `$contour-sync`，ChatGPT 用 `@` 选“知界 · 同步”。只用各端通用的 frontmatter 字段；Codex/ChatGPT 通过 `agents/openai.yaml` 关闭自动触发，Claude 靠描述限定只在用户点名时使用。
+- 主技能新增 `agents/openai.yaml`，在 ChatGPT 中显示为“知界”。
+- 新增 `references/report.md`：初始化、同步、查看状态的汇报改用表格，逐行写明哪个端补进了什么、没取到的原因、需要用户处理的问题和各端读取情况，末尾一句总结条数。`SKILL.md` 和 `drive.md` 的汇报处改为引用它。
+
+### 插件与上架
+
+- Codex 插件清单补 `logo`、`composerIcon`、`brandColor`、`privacyPolicyURL`、`termsOfServiceURL`；隐私政策指向英文 README 的 Privacy 一节。
+- 新增等高线 logo 和单色 icon（`docs/images/`），以及中英文使用条款 `TERMS.md`。
+
+### README
+
+- 中文 README 增加“点名调用”对照表、同步汇报示例和隐私说明。
+
+### 仓库
+
+- 公开仓库的 `docs/` 只保留 README 配图；需求文档、roadmap 和历史文档移出仓库，仅在本地保留。`.codex-tmp/` 加入忽略。
+- 英文 README 删除指向已移出文档的链接，其余内容待中文版定稿后重新翻译。
+
 ## [0.6.1] — 2026-09-19 · 先定档案位置；中文 README 重写
 
 ### 技能

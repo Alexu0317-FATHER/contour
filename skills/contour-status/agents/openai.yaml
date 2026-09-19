@@ -1,0 +1,5 @@
+interface:
+  display_name: "知界 · 状态"
+  short_description: "查看各个 AI 的同步进度和待处理事项"
+policy:
+  allow_implicit_invocation: false

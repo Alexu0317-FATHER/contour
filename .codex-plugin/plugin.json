@@ -1,6 +1,6 @@
 {
   "name": "contour",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Build and maintain a portable personal profile across Claude Code, Codex, Claude.ai and ChatGPT, so their memories and communication strategies converge on one source of truth.",
   "author": {
     "name": "Alexu0317-FATHER",
@@ -28,6 +28,11 @@
       "Write"
     ],
     "websiteURL": "https://github.com/Alexu0317-FATHER/contour",
+    "privacyPolicyURL": "https://github.com/Alexu0317-FATHER/contour/blob/master/README.md#privacy",
+    "termsOfServiceURL": "https://github.com/Alexu0317-FATHER/contour/blob/master/TERMS.md",
+    "brandColor": "#0F73E1",
+    "composerIcon": "./docs/images/icon.png",
+    "logo": "./docs/images/logo.png",
     "defaultPrompt": [
       "帮我开始使用知界。",
       "同步知界",

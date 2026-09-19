@@ -10,8 +10,7 @@ It collects the memory each endpoint can currently provide, preserves sources, r
 
 The current version is in development. A complete installable release is not available yet. [`skills/contour/`](skills/contour/) contains the skill draft, reference rules, templates, and validation scripts. The following describes the intended experience.
 
-The earlier cognitive-state tracking product remains at the `v0.3.0-cognitive` tag and [Release](https://github.com/Alexu0317-FATHER/contour/releases). See [PIVOT](docs/history/PIVOT.md) for the change in direction.
-
+The earlier cognitive-state tracking product remains at the `v0.3.0-cognitive` tag and [Release](https://github.com/Alexu0317-FATHER/contour/releases).
 ## Getting started after release
 
 Enable Contour in your AI tool and say:
@@ -33,7 +32,3 @@ Important conclusions retain their sources. Unresolved conflicts are presented f
 ## License
 
 MIT — see [LICENSE](LICENSE).
-
----
-
-See the [product requirements](docs/新知界需求.md) for development goals and acceptance criteria.
