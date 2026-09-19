@@ -1,17 +1,24 @@
 #!/usr/bin/env python3
-"""生成一个合规的倾倒包骨架：唯一 dump_id、带时区的时间戳、正确的路径。
+"""生成一个倾倒包骨架（contour-dump-v2）：唯一 dump_id、带时区的时间戳、受管收件区内的路径。
+
+这是 references/protocol.md 规则的一种本地实现。不能运行 Python 时，
+按 protocol.md 用其他工具生成同样的字段即可。
 
 用法：
-    python new_dump.py <实例仓路径> <endpoint-id> <baseline|incremental|verification>
-                       [--model MODEL] [--provider P] [--surface S]
+    python new_dump.py <档案根目录> <store-id> <baseline|incremental|verification>
+                       --collected-via <执行读取的使用端 endpoint-id 或工具名>
+                       --source-method native-view|model-self-report|export|file-memory|mixed
+                       [--memory-scope S] [--model MODEL] [--provider P]
                        [--trigger user|probe] [--last-revision REV]
-                       [--previous-dump-id ID]
+                       [--previous-dump-id ID] [--contour-loaded true|false|unknown]
+
+store-id 是记忆存储标识（AI 实际保存记忆的位置），不是读取它的端。
+--collected-via 和 --source-method 没有默认值：它们是来源事实，必须按实际读取者和
+采集方式给出，不能由脚本替调用者假定。
 
 为什么要脚本：dump_id 唯一性、ISO 8601 带时区、路径正确——
 这些是确定性的活，让模型每次现编只会引入不一致。
 语义部分（真正写内容）仍然归模型。
-
-规范见 references/protocol.md。
 """
 
 import argparse
@@ -21,22 +28,22 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-# endpoint-id 会被直接拼进路径，必须限定字符集——否则 "../escaped" 能把包
-# 写到 dumps/inbox 之外，而校验器只扫 inbox，看不见它。
-ENDPOINT_ID = re.compile(r"\A[a-z0-9]+(?:-[a-z0-9]+)*\Z")
+# store-id 会被直接拼进路径，必须限定字符集——否则 "../escaped" 能把包
+# 写到 dumps/inbox 之外，而校验器只扫 inbox，看不见它。collected_via 沿用同一字符集。
+IDENTIFIER = re.compile(r"\A[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 
 SKELETON = """---
-schema_version: contour-dump-v1
+schema_version: contour-dump-v2
 dump_id: {dump_id}
-endpoint_id: {endpoint_id}
+store_id: {store_id}
+collected_via: {collected_via}
 provider: {provider}
-surface: {surface}
 model: {model}
 captured_at: {captured_at}
 dump_type: {dump_type}
 trigger: {trigger}
-memory_scope: unknown
-source_method: model-self-report
+memory_scope: {memory_scope}
+source_method: {source_method}
 contour_context_loaded: {loaded}
 last_contour_revision_read: {last_revision}
 previous_dump_id: {previous_dump_id}
@@ -70,7 +77,7 @@ previous_dump_id: {previous_dump_id}
 <!-- 来源不确定时放这里或"无法确认"，不许冒充原生记忆。
      混在一起，冲突消解那步就没法工作。 -->
 
-### 当前会话现场推断
+### 当前会话内容与推断
 
 ### 已加载的知界文件
 
@@ -96,28 +103,46 @@ def main():
 
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("instance_repo", help="实例仓根目录")
-    p.add_argument("endpoint_id", help="稳定端标识，全小写，不含模型名")
+    p.add_argument("instance_repo", help="档案根目录（当前文件布局方案）")
+    p.add_argument("store_id", help="记忆存储标识，全小写，不含模型名")
     p.add_argument("dump_type", choices=["baseline", "incremental", "verification"])
     p.add_argument("--model", default="unknown")
     p.add_argument("--provider", default="unknown")
-    p.add_argument("--surface", default="web",
-                   choices=["web", "desktop", "code", "cli"])
+    p.add_argument("--collected-via", required=True,
+                   help="执行读取的使用端 endpoint-id 或工具名；没有默认值，未知写 unknown")
+    p.add_argument("--source-method", required=True,
+                   choices=["native-view", "model-self-report", "export",
+                            "file-memory", "mixed"],
+                   help="本次实际的采集方式；没有默认值")
+    p.add_argument("--memory-scope", default="unknown",
+                   choices=["global", "project", "workspace", "mixed", "unknown"])
     p.add_argument("--trigger", default="user", choices=["user", "probe"],
-                   help="MVP 只有这两种：所有倾倒都由用户确认后发起")
+                   help="本次倾倒由什么发起：user = 用户本轮请求，probe = 探测检查；"
+                        "不表示授权依据")
     p.add_argument("--last-revision", default="null",
-                   help="本端最后读到的统一版本")
+                   help="该存储所在使用端最后读到的统一版本")
     p.add_argument("--previous-dump-id", default="null",
                    help="incremental 必填")
     p.add_argument("--contour-loaded", default="unknown",
                    choices=["true", "false", "unknown"])
     args = p.parse_args()
 
-    if not ENDPOINT_ID.match(args.endpoint_id):
-        p.error(
-            f"endpoint_id 不合规：{args.endpoint_id!r}。"
-            "只允许小写字母、数字和单个连字符分隔（chatgpt-web / codex-cli）"
-        )
+    for name in ("store_id", "collected_via"):
+        value = getattr(args, name)
+        if not IDENTIFIER.match(value):
+            p.error(
+                f"{name} 不合规：{value!r}。"
+                "只允许小写字母、数字和单个连字符分隔（claude-code-local / codex-cli）"
+            )
+    # 空白不等于“未知”：未知写 unknown，没有时写 null。
+    for flag, value, hint in (
+        ("--provider", args.provider, "未知写 unknown"),
+        ("--model", args.model, "未知写 unknown"),
+        ("--last-revision", args.last_revision, "没有时写 null"),
+        ("--previous-dump-id", args.previous_dump_id, "没有时写 null"),
+    ):
+        if not value.strip():
+            p.error(f"{flag} 不能为空：{hint}")
     if args.dump_type == "incremental" and args.previous_dump_id == "null":
         p.error("incremental 包必须给 --previous-dump-id")
 
@@ -126,9 +151,9 @@ def main():
     dump_id = str(uuid.uuid4())
 
     inbox = (Path(args.instance_repo) / "dumps" / "inbox").resolve()
-    target_dir = (inbox / args.endpoint_id).resolve()
+    target_dir = (inbox / args.store_id).resolve()
     # 双保险：字符集挡住已知形态，解析后的路径检查挡住符号链接一类的意外。
-    if target_dir != inbox / args.endpoint_id or inbox not in target_dir.parents:
+    if target_dir != inbox / args.store_id or inbox not in target_dir.parents:
         print(f"拒绝写到收件区之外：{target_dir}", file=sys.stderr)
         return 1
 
@@ -143,9 +168,11 @@ def main():
 
     target.write_text(SKELETON.format(
         dump_id=dump_id,
-        endpoint_id=args.endpoint_id,
+        store_id=args.store_id,
+        collected_via=args.collected_via,
         provider=args.provider,
-        surface=args.surface,
+        memory_scope=args.memory_scope,
+        source_method=args.source_method,
         model=args.model,
         captured_at=now.isoformat(timespec="seconds"),
         dump_type=args.dump_type,

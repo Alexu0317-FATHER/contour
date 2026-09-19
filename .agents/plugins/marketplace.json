@@ -1,0 +1,20 @@
+{
+  "name": "contour",
+  "interface": {
+    "displayName": "知界 Contour"
+  },
+  "plugins": [
+    {
+      "name": "contour",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

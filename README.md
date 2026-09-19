@@ -2,100 +2,33 @@
 
 English | [中文](README.zh.md)
 
-**Cross-endpoint memory coordination for people who use several AI assistants at once.**
+Contour helps people who use several AI assistants organize and synchronize personal memory, reducing the need to introduce themselves again when switching tools.
 
-If you use Claude Code, Codex, Claude.ai, Claude Desktop and ChatGPT, each one holds a different, partial memory of you. Switching endpoints means explaining yourself again — your memory has become a platform switching cost. And none of them carries a portable definition of *how you want to be talked to*.
+It collects the memory each endpoint can currently provide, preserves sources, reconciles duplicates, complementary information, and conflicts, then supplies relevant results to the endpoints. The goal is a gradually shared understanding of your background and communication preferences.
 
-Contour addresses that. It does **not** replace any platform's native memory. It keeps one source of truth you own, feeds each endpoint's native memory from it, and puts a portable routing table into every endpoint's always-on context so behaviour converges over time.
+## Development status
 
----
+The current version is in development. A complete installable release is not available yet. [`skills/contour/`](skills/contour/) contains the skill draft, reference rules, templates, and validation scripts. The following describes the intended experience.
 
-## Status: in development, not installable yet
+The earlier cognitive-state tracking product remains at the `v0.3.0-cognitive` tag and [Release](https://github.com/Alexu0317-FATHER/contour/releases). See [PIVOT](docs/history/PIVOT.md) for the change in direction.
 
-This repository is **mid-rebuild**. There is no release you can install today.
+## Getting started after release
 
-| | |
-|---|---|
-| **What's here** | A skill draft under [`skills/contour/`](skills/contour/) — protocol, references, templates and validation scripts |
-| **What's not** | A working end-to-end implementation. The private instance repository now has an empty skeleton (2026-08-12), but **channel verification GH-01–06 has not been run on any endpoint**, and no unified assets exist |
-| **Previous version** | Tag `v0.3.0-cognitive` and its [GitHub Release](https://github.com/Alexu0317-FATHER/contour/releases) — a different product (cognitive-state tracking) that ran for over a month. See [`docs/history/PIVOT.md`](docs/history/PIVOT.md) for what changed and why |
+Enable Contour in your AI tool and say:
 
-**Everything the old README described — `/contour:sync`, `/contour:extract`, the Stop hook, Domain State — belongs to that archived version and no longer exists in the working tree.**
+> Help me start using Contour.
 
-## Where your data lives
+You can bring existing personal material or start without a prepared profile. Contour uses known information, asks only for necessary missing details, and helps configure the archive and collect memory from your endpoints. An existing Contour archive is reused.
 
-**Not in this repository.** Contour walks you through creating **your own private repository**, and your profile, dumps and evidence live there — this repo is public code, and personal material has no business in it.
+Say “sync Contour” to organize new memory, or “what's Contour's status?” to see completed and pending work. You can also explicitly select Contour through the platform's skill entry point.
 
-That private repository is yours, not Contour's: you can open it at any time and read every conclusion, where it came from, and which endpoint contributed it when.
+## Your information and results
 
-## Prerequisites
+Your archive stays in the location recorded in your configuration, under your control, rather than in distributed skill files or templates. The release documentation will describe its connection method. Contour explains any missing connection or permission.
 
-Same idea as a project telling you to install git or node first. **Not meeting these is not "degraded mode" — it's a failed install.** Contour tells you what is missing rather than quietly shrinking to a half-working setup.
+At the end of each run, you can see what was organized, which endpoints received or read the update, and what remains pending. If the platform's native memory state cannot be confirmed, the report says so.
 
-**1. A private GitHub repository dedicated to Contour data.** If you already have one, provide its URL and Contour will verify privacy, access, and structure. If you do not have a GitHub account or a dedicated repository, Contour guides you through signup, authorization, and private-repository creation. You handle login, verification codes, and consent; the Agent handles the creation and configuration it is authorized to perform. **Do not reuse a repository that contains another project** — this one may hold health, family, and career material.
-
-**2. Every endpoint you include must be able to read *and write* that repository.**
-
-| Endpoint | How to satisfy it |
-|---|---|
-| **Claude Code / Codex / Zed** | Local git plus access to the repository is enough |
-| **ChatGPT** | Settings → Plugins → enable the **GitHub plugin**. Available on Plus; no Developer Mode needed |
-| **Claude.ai Chat / Projects** | The built-in GitHub integration only reads and syncs project knowledge. In the current-account test, Chat's temporary code environment could edit files and commit locally but had no GitHub credentials to push. Bidirectional sync still requires a **verified writable** remote-MCP path; GitHub's official remote MCP has not yet been verified inside claude.ai Chat |
-
-> ⚠️ **Using GitHub as Project knowledge does not count as bidirectional access.** It syncs repository files into searchable knowledge but cannot submit a dump package.
->
-> The **Code** tab in claude.ai is a Claude Code session surface. It can display or remotely control local Claude Code sessions and can also start cloud Claude Code tasks; repository access depends on the underlying CC session and authorization. It is not ordinary Chat and **does not share Chat's native memory**, so Code-tab capabilities cannot stand in for Chat's write path.
-
-## Installing
-
-### 1. Install the skill (you do this — one command)
-
-```bash
-git clone https://github.com/Alexu0317-FATHER/contour ~/.claude/skills/contour
-```
-
-Claude Code inside VS Code reads the same directory, so **one install covers both**.
-
-> ⚠️ `master` still holds the archived previous product; the new skill lives on the `chore/clear-legacy-tree` branch. Until that merges, add `-b chore/clear-legacy-tree`.
-
-**Other endpoints**: how to install the skill package on Codex, Claude.ai, ChatGPT and Zed is `[unverified]` — it will be filled in once each is actually tested. Another product's setup steps do not get written from memory.
-
-### 2. Say one sentence (you do this)
-
-Once installed, say "**initialise Contour**" anywhere.
-
-The skill asks which endpoints you use and which are primary, then walks you through creating a private instance repository and running a baseline dump on each. **The first unified profile requires baselines from at least two different endpoints** — with only one, what you get is not a cross-endpoint profile, it is that one endpoint repeating itself.
-
-After that, "**sync Contour**" or "**what's Contour's status**" is all you need. The skill reads the instance repository to work out which step you are on (catch-up / consolidation / dump / audit). **No context to explain, no commands to memorise.**
-
-### 3. Config files are written by the skill (not by you)
-
-**You never hand-edit a `CLAUDE.md` or `AGENTS.md`.** The skill:
-
-- writes an import line pointing at your source of truth into **global** `~/.claude/CLAUDE.md`
-- writes a marked block into **global** `~/.codex/AGENTS.md` (Codex does not expand `@path` — a measured result — so that side gets the full text)
-- refreshes both after every sync
-
-**It never touches the `CLAUDE.md` / `AGENTS.md` inside your projects.** Those may be committed to git, shared with colleagues, and carry the project's own conventions — no personal-profile tool has any business editing them.
-
-### The one step that stays manual: uploading a file to web endpoints
-
-Contour has not yet **verified** a stable path that directly updates project files in Claude.ai Chat or ChatGPT (third-party sync tools run on session cookies and fail silently when those expire, so the skill does not recommend them). For now, the workflow generates a dated `routing.md` and tells you when to drag it into Project Files / the file library.
-
-Until a new official path is verified and integrated, this remains an **infrequent manual action** because the file changes slowly. **Day-to-day dumping and reading avoid manual carrying only on endpoints whose repository read/write path has actually been verified.**
-
-### Nothing happens before you say so
-
-If you merely complain that "this AI doesn't get me", the skill will at most explain itself and ask whether you want to sync — **it will not even read your private repository.** Reading, writing, committing and merging all require an explicit yes.
-
-Which loading mechanism each endpoint actually uses, why, and how copies are kept from going stale: [`skills/contour/references/load.md`](skills/contour/references/load.md).
-
-## Design commitments
-
-- **One authoritative anchor; any capable endpoint may take a turn coordinating; a single publish is serialised.** Copies are fine; two authoritative anchors are not. Catch up before reading, and write conditionally.
-- **Contour does not hold your memory, it refreshes it.** Native memory systems keep doing their job; Contour supplies better material and a portable attention policy.
-- **Convergence is measured, not asserted.** Without behavioural testing there is no reason to believe endpoints are drifting together rather than apart.
-- **Nothing happens without your say-so.** The skill being triggered is not permission to read your repository, let alone write to it.
+Important conclusions retain their sources. Unresolved conflicts are presented for your decision. You can correct, withdraw, or move your information.
 
 ## License
 
@@ -103,4 +36,4 @@ MIT — see [LICENSE](LICENSE).
 
 ---
 
-<sub>Working on Contour itself, or wondering why a design decision went the way it did? Start from [`docs/新知界需求.md`](docs/新知界需求.md).</sub>
+See the [product requirements](docs/新知界需求.md) for development goals and acceptance criteria.

@@ -1,0 +1,37 @@
+{
+  "name": "contour",
+  "version": "0.6.0",
+  "description": "Build and maintain a portable personal profile across Claude Code, Codex, Claude.ai and ChatGPT, so their memories and communication strategies converge on one source of truth.",
+  "author": {
+    "name": "Alexu0317-FATHER",
+    "url": "https://github.com/Alexu0317-FATHER"
+  },
+  "homepage": "https://github.com/Alexu0317-FATHER/contour",
+  "repository": "https://github.com/Alexu0317-FATHER/contour",
+  "license": "MIT",
+  "keywords": [
+    "memory",
+    "personal-profile",
+    "cross-platform",
+    "sync"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "知界 Contour",
+    "shortDescription": "Collect, consolidate and return your memories across AI assistants",
+    "longDescription": "Contour collects what each AI assistant remembers about you, keeps the sources, merges duplicates, surfaces conflicts for you to decide, and returns the result to every assistant you use. The archive stays in a location you choose and control.",
+    "developerName": "Alexu0317-FATHER",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/Alexu0317-FATHER/contour",
+    "defaultPrompt": [
+      "帮我开始使用知界。",
+      "同步知界",
+      "看下知界状态"
+    ]
+  }
+}
