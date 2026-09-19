@@ -16,7 +16,7 @@ If you use more than one AI, each of them knows part of you, and every time you 
 
 It collects what each AI can currently share about you, plus any material you provide, organizes it into one archive that you control, and hands the relevant parts to your other AIs.
 
-![What Contour does](<docs/images/ChatGPT Image 2026年9月19日 11_38_23.png>)
+![What Contour does](docs/images/what_contour_does.png)
 
 The more you use it, the more your AIs' understanding of you converges, instead of each one knowing a different you.
 
@@ -30,7 +30,7 @@ The more you use it, the more your AIs' understanding of you converges, instead 
 
 ## Installation
 
-Contour ships as a plugin. Install it in each AI you want to share your memory.
+Install Contour in each AI you want to share your memory.
 
 ### Claude web (claude.ai) / Claude Desktop
 
@@ -53,11 +53,7 @@ Contour ships as a plugin. Install it in each AI you want to share your memory.
 
 When asked for an installation scope, choose **user scope** so it works in every project. After installing, reload plugins when prompted or start a new session.
 
-### ChatGPT / Codex
-
-Open **Plugins** in the ChatGPT or Codex app sidebar, search for **Contour**, and click **+** to install. In Codex CLI, type `/plugins` to find it.
-
-You can also install it in Codex CLI straight from the repository:
+### Codex
 
 ```text
 codex plugin marketplace add Alexu0317-FATHER/contour
@@ -65,6 +61,13 @@ codex plugin add contour@contour
 ```
 
 Start a new session after installing.
+
+### ChatGPT web
+
+1. Download [contour.zip](https://github.com/Alexu0317-FATHER/contour/releases/latest/download/contour.zip).
+2. In the ChatGPT sidebar, open **Plugins**, switch to the **Skills** tab, click **Create**, choose **Upload from your computer**, and select the zip.
+
+![Upload a skill in ChatGPT](docs/images/chatgpt_upload_skill.png)
 
 ### Let the AI install it
 
@@ -107,9 +110,9 @@ If the AI doesn't pick up Contour on its own, call it directly:
 
 | | Claude (web / Desktop / Claude Code) | Codex | ChatGPT |
 |---|---|---|---|
-| Contour (anything) | `/contour` | `$contour` | Type `@` and pick 知界 |
-| Sync | `/contour-sync` | `$contour-sync` | Type `@` and pick 知界 · 同步 |
-| Status | `/contour-status` | `$contour-status` | Type `@` and pick 知界 · 状态 |
+| Contour (anything) | `/contour` | `$contour` | Type `@` and pick contour |
+| Sync | `/contour-sync` | `$contour-sync` | Type `@`, pick contour, then write "sync" |
+| Status | `/contour-status` | `$contour-status` | Type `@`, pick contour, then write "status" |
 
 You can add a sentence after the command, for example `/contour This is out of date, stop using it`.
 

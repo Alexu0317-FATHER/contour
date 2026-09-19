@@ -16,7 +16,7 @@
 
 它从不同 AI 当前能够提供的记忆以及你提供的资料中取得信息，整理成一份由你控制的统一档案，再把相关内容提供给其他 AI 使用。
 
-![知界做什么](<docs/images/ChatGPT Image 2026年9月19日 11_38_23.png>)
+![知界做什么](docs/images/what_contour_does_zh.png)
 
 随着持续使用，不同 AI 对你的理解会逐渐趋同，而不是各自认识一个不同的你。
 
@@ -34,7 +34,7 @@
 
 ## 安装
 
-知界以插件形式发布。想让哪几个 AI 互相认识你，就在哪几个 AI 里各装一次。
+想让哪几个 AI 互相认识你，就在哪几个 AI 里各装一次知界。
 
 ### Claude 网页端（claude.ai）/ Claude Desktop
 
@@ -57,11 +57,7 @@
 
 出现安装范围时选 **user scope**，在任何项目里都能用。装好后按提示重新加载插件，或者开一个新会话。
 
-### ChatGPT / Codex
-
-在 ChatGPT 或 Codex 应用的侧边栏打开 **插件**，搜索「知界」，点 **＋** 安装。Codex CLI 里输入 `/plugins` 也能搜到。
-
-Codex CLI 也可以直接从仓库安装：
+### Codex
 
 ```text
 codex plugin marketplace add Alexu0317-FATHER/contour
@@ -69,6 +65,13 @@ codex plugin add contour@contour
 ```
 
 装好后开一个新会话。
+
+### ChatGPT 网页端
+
+1. 下载 [contour.zip](https://github.com/Alexu0317-FATHER/contour/releases/latest/download/contour.zip)。
+2. 在 ChatGPT 侧边栏打开 **插件**，切到 **技能**，点右上角 **＋**，选 **从电脑上传**，选中下载的 zip。
+
+![ChatGPT 上传技能](docs/images/chatgpt_upload_skill.png)
 
 ### 让 AI 帮你装
 
@@ -111,9 +114,9 @@ AI 没有自动用上知界时，可以直接点名：
 
 | | Claude（网页端 / Desktop / Claude Code） | Codex | ChatGPT |
 |---|---|---|---|
-| 知界（任何操作） | `/contour` | `$contour` | 输入 `@`，选「知界」 |
-| 同步 | `/contour-sync` | `$contour-sync` | 输入 `@`，选「知界 · 同步」 |
-| 查看状态 | `/contour-status` | `$contour-status` | 输入 `@`，选「知界 · 状态」 |
+| 知界（任何操作） | `/contour` | `$contour` | 输入 `@`，选 contour |
+| 同步 | `/contour-sync` | `$contour-sync` | 输入 `@`，选 contour，接着写“同步” |
+| 查看状态 | `/contour-status` | `$contour-status` | 输入 `@`，选 contour，接着写“查看状态” |
 
 命令后面可以接一句话，比如 `/contour 这条信息过时了，以后别再用`。
 

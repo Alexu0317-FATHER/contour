@@ -17,6 +17,8 @@
 
 - 中文 README 增加“点名调用”对照表、同步汇报示例和隐私说明。
 - 英文 README 按中文版重新翻译；两版隐私一节后都链接使用条款。
+- 暂不上架 OpenAI 插件目录：个人开发者认证要绑定付款方式，中国不在支持范围内。README 删除插件目录安装方式；Codex 改为从仓库添加插件市场安装，ChatGPT 网页端改为下载 `contour.zip` 后上传技能，并附上传界面截图。“点名调用”表中 ChatGPT 一栏相应改为 `@contour` 后接文字。
+- 示意图分中英两版，文件名改为 `what_contour_does.png` 和 `what_contour_does_zh.png`，引用改为标准 Markdown 路径。
 
 ### 仓库
 
