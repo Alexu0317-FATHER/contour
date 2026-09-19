@@ -23,6 +23,7 @@
 ### 仓库
 
 - 公开仓库的 `docs/` 只保留 README 配图；需求文档、roadmap 和历史文档移出仓库，仅在本地保留。`.codex-tmp/` 加入忽略。
+- 开启 GitHub Pages（https://alexu0317-father.github.io/contour/）：cayman 主题渲染 README，jekyll-sitemap 生成站点地图，`skills/`、`evals/`、`CLAUDE.md`、`AGENTS.md` 不生成页面。根目录的 `googlefe6d5c48df2636ab.html` 是 Google Search Console 所有权验证文件，删了会失去所有权。
 
 ## [0.6.1] — 2026-09-19 · 先定档案位置；中文 README 重写
 

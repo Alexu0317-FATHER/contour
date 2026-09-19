@@ -1,0 +1,19 @@
+theme: jekyll-theme-cayman
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+url: https://alexu0317-father.github.io
+baseurl: /contour
+
+title: Contour 知界
+tagline: Help every AI you use get to know the same you
+description: >-
+  A plugin for Claude, ChatGPT and Codex that collects, consolidates and returns
+  your memories across AI assistants, kept in an archive you control.
+
+exclude:
+  - skills/
+  - evals/
+  - CLAUDE.md
+  - AGENTS.md
