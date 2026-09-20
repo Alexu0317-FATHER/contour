@@ -68,10 +68,14 @@ codex plugin add contour@contour
 
 ### ChatGPT 网页端
 
-1. 下载 [contour.zip](https://github.com/Alexu0317-FATHER/contour/releases/latest/download/contour.zip)。
-2. 在 ChatGPT 侧边栏打开 **插件**，切到 **技能**，点右上角 **＋**，选 **从电脑上传**，选中下载的 zip。
+从电脑上传的技能是快照，之后不会随仓库更新。因此请在 ChatGPT 侧边栏打开 **插件**，点右上角 **＋**，进入「新插件」，按下面填写后勾选风险提示中的「我了解并希望继续」，再点「创建」。
 
-![ChatGPT 上传技能](docs/images/chatgpt_upload_skill.png)
+- **名称：** 知界
+- **描述（可选）：** 让不同 AI 逐渐认识同一个你
+- **连接：** 选择「服务器 URL」，填入 `https://github.com/Alexu0317-FATHER/contour`
+- **身份验证：** 选择「无身份验证」
+
+![在 ChatGPT 中添加自定义插件](docs/images/add_custom_plugin_zh.png)
 
 ### 让 AI 帮你装
 

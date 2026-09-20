@@ -64,10 +64,14 @@ Start a new session after installing.
 
 ### ChatGPT web
 
-1. Download [contour.zip](https://github.com/Alexu0317-FATHER/contour/releases/latest/download/contour.zip).
-2. In the ChatGPT sidebar, open **Plugins**, switch to the **Skills** tab, click **Create**, choose **Upload from your computer**, and select the zip.
+Skills uploaded from your computer are snapshots and do not update with the repository. Instead, open **Plugins** in the ChatGPT sidebar, click **+** in the top-right corner to open **New Plugin**, complete the following fields, select **I understand and want to continue** in the risk notice, then click **Create**.
 
-![Upload a skill in ChatGPT](docs/images/chatgpt_upload_skill.png)
+- **Name:** Contour
+- **Description (optional):** Help every AI you use get to know the same you.
+- **Connection:** Select **Server URL** and enter `https://github.com/Alexu0317-FATHER/contour`
+- **Authentication:** Select **No Auth**
+
+![Add a custom plugin in ChatGPT](docs/images/add_custom_plugin_en.png)
 
 ### Let the AI install it
 
