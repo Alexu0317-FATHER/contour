@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.6.4] — 2026-10-08 · 状态记录的写入与核对
+
+以下改动只做过静态检查和脚本试跑，尚未在各端实测；实测发现见 [#19](https://github.com/Alexu0317-FATHER/contour/issues/19)。
+
+### Added
+
+- `references/google-drive.md` 新增「状态记录」：只能新建文件的端用状态快照更新存储和使用端的状态，不修改已有文件；验收要求补两条。
+- `references/drive.md` 第五节：状态记录没写进去时，在 `review/` 留失败记录并在汇报中写明；恢复时据此补记。
+- `SKILL.md`「判断当前状态」：读取状态时与收件区里的包、消费记录和已发布版本核对，不一致时以实际内容为准。
+- `references/report.md`：状态记录没写进档案、状态记录与实际内容对不上时的写法。
+- `evals.md` 新增 E-4s、E-4t、E-4u。
+
+### Changed
+
+- 同步第 9 步更新状态后回读核对。
+- `references/schema.md` 中状态文件并发写回的说明改为引用 `protocol.md`。
+
+### Fixed
+
+- `scripts/new_dump.py` 生成的文件名时间写法改为与 `captured_at` 一致、冒号换成连字符（如 `2026-10-08T14-13-33+08-00`），与 `protocol.md` 的规定一致。
+
 ## [0.6.3] — 2026-09-20 · Google Drive 档案介质与写包确认
 
 ### Added

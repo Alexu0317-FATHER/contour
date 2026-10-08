@@ -147,7 +147,8 @@ def main():
         p.error("incremental 包必须给 --previous-dump-id")
 
     now = datetime.now(timezone.utc).astimezone()
-    stamp = now.strftime("%Y%m%dT%H%M%S%z")
+    # 文件名里的时间与 captured_at 同一写法，冒号换成连字符（protocol.md）。
+    stamp = now.isoformat(timespec="seconds").replace(":", "-")
     dump_id = str(uuid.uuid4())
 
     inbox = (Path(args.instance_repo) / "dumps" / "inbox").resolve()
